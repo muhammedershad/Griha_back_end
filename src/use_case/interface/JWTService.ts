@@ -10,8 +10,8 @@ interface DecodedToken extends JwtPayload {
 export default class JWTService implements TokenService {
     async createToken(data: string, role: string): Promise<string> {
         try {
-            const token = await jwt.sign({ userData: data, role: role }, "Learners$2_SecretKey", { expiresIn: '24h' });
-            // console.log("TokenType",typeof(token))
+            const token = await jwt.sign({ userData: data, role: role }, "Griha_SecretKey", { expiresIn: '24h' });
+            console.log("TokenType",typeof(token),token)
             return token
 
         } catch (error: any) {

@@ -19,8 +19,8 @@ var otpSchema: Schema<Otp> = new mongoose.Schema({
         type: String,
         required: true,
     },
-    phoneNumber: {
-        type: Number,
+    phone: {
+        type: String,
         required: true,
     },
     password: {
@@ -37,7 +37,7 @@ var otpSchema: Schema<Otp> = new mongoose.Schema({
     },
     expiresAt: {
         type: Date,
-        default: new Date(Date.now() + 3 * 60 * 1000), // Set default expiration time to 3 minutes
+        default: new Date(Date.now() + 15 * 60 * 1000), // Set default expiration time to 15 minutes
         index: { expires: 0 },
     },
 });

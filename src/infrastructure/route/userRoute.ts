@@ -16,6 +16,8 @@ const router = express.Router()
 //Test Server
 
 router.post('/signup', (req, res) => controller.signUp(req, res))
+router.post('/verify-otp', (req, res) => controller.register(req, res))
+router.post('/login', (req, res) => controller.login(req, res))
 router.post('/register', (req, res) => controller.register(req, res));
 router.post('/email', (req, res) => controller.email(req,res))
 router.get('/check-user-email', (req, res) => controller.checkEmail(req, res))

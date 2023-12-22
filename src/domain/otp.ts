@@ -4,8 +4,8 @@ interface Otp {
     lastName: string,
     username: string,
     password: string,
-    phoneNumber: number,
-    otp: string,
+    phone: string,
+    otp: string | null,
     createdAt: Date,
     expiresAt: Date,
 }

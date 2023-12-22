@@ -5,15 +5,35 @@ import JWTService from '../../use_case/interface/JWTService';
 const tokenService = new JWTService()
 
 class OtpRipository {
-    
+    save = async (user : otp) => {
+        try {
+            await OtpModel.findOneAndDelete({ email: user.email });
+            const newUser = new OtpModel(user)
+            const data = await newUser.save()
+            return data;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    verifyOTP = async (email: string) => {
+        console.log(email,'userrepository-email')
+        const user = await OtpModel.findOne({email : email})
+        console.log(user)
+        if(user) {
+            return {
+                success : true,
+                user
+            }
+        } else {
+            return {
+                success: false,
+                message: 'User not found!'
+            }
+        }
+    }
 }
 
-export const saveOtp = async (email: string, otp: string) => {
-    await OtpModel.findOneAndDelete({ email });
-    const newUser = new OtpModel({ email, otp })
-    const data = await newUser.save()
-    return data;
-}
 
 // export const verifyOTP = async (email: string, otp: string) => {
 //     const savedOtp = await OtpModel.findOne({ email });

@@ -8,10 +8,8 @@ interface User {
     phone: string,
     password: string,
     image: string,
-    role: string,
     isBlocked: boolean,
-    isVerified: boolean,
-    qualification: string,
+    username: string,
     address: {
         streetAddress: string,
         landmark: string,
@@ -20,7 +18,6 @@ interface User {
         country: string,
         pincode: string,
     },
-    enrolls: [],
     createdAt: Date,
 }
 

@@ -1,13 +1,17 @@
+import { Document, Types } from "mongoose";
+import Otp from "../domain/otp";
 import User from "../domain/user";
 import userRepository from "../infrastructure/repository/userRepository";
 // import { verifyOTP } from "../infrastructure/repository/otpRepository";
 // import { verifyEmail } from "./interface/emailService";
 import BcryptPasswordHashingService from './interface/encryptService';
-// import JWTService from "./interface/jwtService";
+import UserRepository from "../infrastructure/repository/userRepository";
+import JWTService from "./interface/JWTService";
 // import Otp from "../domain/otp";
 // import adminRepository from "../infrastructure/repository/adminRepository";
 
 const encryptService = new BcryptPasswordHashingService();
+const JWT= new JWTService();
 // const tokenService = new JWTService()
 // const adminrepository = new adminRepository()
 
@@ -32,29 +36,71 @@ class Userusecase {
         else {
             return {
                 userExists: false,
-                status: 400,
+                status: 200,
                 // message: '',
                 // data: registerData.data,
             }
         }
         } catch (error) {
-            
+            console.log(error)
         }
     }
 
-    async register(user: User) {
+    async register(user: User | (Document<unknown, {}, Otp> & Otp & { _id: Types.ObjectId; }) | undefined) {
         console.log('inside useCase')
-        const emailFound = await this.userRepository.findByEmail(user.email)
-        if (emailFound?.success) {
+        const save = await this.userRepository.save(user)
+        if (save?.success) {
             return {
-                status: 400,
-                message: 'User already exists',
+                status: 200,
+                message: save.message,
             }
         }
         else {
             return {
-                userExists: false
+                status: 400,
+                message: 'Error in registration',
             }
+        }
+    }
+
+    async login ( email: string, password: string) {
+        try {
+            const user = await this.userRepository.login( email)
+            if ( !user ) {
+                return  {
+                    success: false,
+                    message: 'User not found'
+                } 
+            } else {
+                console.log(password);
+                
+                const verifyPassword = await encryptService.verifyHashData(password, user?.Password)
+                console.log(verifyPassword,'matches password');
+                
+                if ( verifyPassword ) {
+                    
+                    const token = await JWT.createToken( user.Email, 'user')
+                    
+                    if ( token ) {
+                        return {
+                            success: true,
+                            token
+                        }
+                    } else {
+                        return {
+                            success: false,
+                            message: 'Error in token generation'
+                        }
+                    }
+                } else {
+                    return {
+                        success: false,
+                        message: 'Incorrect password'
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 

@@ -20,6 +20,8 @@ export default class BcryptPasswordHashingService implements PasswordHashingServ
 
     async verifyHashData(unhashed: string, hashed: string): Promise<boolean> {
         try {
+            console.log('unhash',unhashed, hashed,'hasing');
+            
             const match = await bcrypt.compare(unhashed, hashed);
             return match;
         } catch (error: any) {

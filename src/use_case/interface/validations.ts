@@ -20,9 +20,16 @@ function isValidName(name: string){
     return nameRegex.test(name);
 }
 
+const isOtpValid = (otp : string) : boolean => {
+    const trimmedOtp = otp.trim()
+    const regex = /^\d{4}$/;
+    return otp.length !== 4;
+}
+
 export {
     isValidEmail,
     isValidPhoneNumber,
     isValidPassword,
     isValidName,
+    isOtpValid
 }
