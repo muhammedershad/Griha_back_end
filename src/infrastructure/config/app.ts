@@ -24,7 +24,21 @@ export const createServer = () => {
         //     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         //     next();
         // });
-        app.use(cors())
+        // app.use((req, res, next) => {
+        //     res.header('Access-Control-Allow-Origin', '*');
+        //     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        //     res.header('Access-Control-Allow-Headers', 'Content-Type');
+        //     res.header('Access-Control-Allow-Credentials', 'true');
+        //     next();
+        //   });
+          
+        const corsOptions = {
+            origin: 'http://localhost:8080', // Replace with the actual origin of your client
+            methods: 'GET, POST, OPTIONS', // Include the necessary HTTP methods
+            credentials: true, // Allow credentials (cookies)
+            optionsSuccessStatus: 204, // Set the preflight response status to 204
+        };
+        app.use(cors(corsOptions))
 
         // Routes
         app.use('/api/user', userRouter)
