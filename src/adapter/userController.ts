@@ -150,7 +150,7 @@ class userController {
             }
 
             const login = await this.userUsecase.login(email, req.body.password);
-            console.log(login);
+            console.log(login,'login status');
             if (login?.success) {
                 res.cookie("token", login?.token || "", {
                     httpOnly: true,
@@ -164,7 +164,7 @@ class userController {
                 });
             } else {
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: login?.message });
             }
         } catch (error) {
