@@ -22,19 +22,19 @@ class userController {
         try {
             console.log("userController", req.body); //test
 
-            let { firstName, lastName, email, phone, password } = req.body;
+            let { firstName, lastName, email, phone, password, username } =
+                req.body;
             firstName = firstName.trim();
             lastName = lastName.trim();
             email = email.trim();
             phone = phone.trim();
+            username = username.trim();
 
-            if (!firstName || !email || !password || !phone) {
-                return res
-                    .status(400)
-                    .json({
-                        success: false,
-                        message: "Missing required fields",
-                    });
+            if (!firstName || !email || !password || !phone || !username) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Missing required fields",
+                });
             }
 
             if (!isValidName(firstName)) {
@@ -60,20 +60,29 @@ class userController {
 
             if (!isValidPassword(password)) {
                 // Validate password
-                return res
-                    .status(400)
-                    .json({
-                        success: false,
-                        message: "Password must be at least 6 characters long",
-                    });
+                return res.status(400).json({
+                    success: false,
+                    message: "Password must be at least 6 characters long",
+                });
             }
 
             const userExists = await this.userUsecase.signup(req.body);
-            console.log(userExists, "user exists");
+            // console.log(userExists?.userExists, "user exists");
             if (userExists?.userExists) {
                 return res.status(400).json({
                     success: false,
-                    message: "User already exists",
+                    message: "Email already exists",
+                });
+            }
+
+            const usernameExists = await this.userUsecase.checkUsername(
+                username
+            );
+            // console.log( usernameExists,'username exists')
+            if (!usernameExists?.success) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Username already exists",
                 });
             }
 
@@ -93,21 +102,23 @@ class userController {
 
     async register(req: Request, res: Response) {
         try {
-            // console.log('userController',req.body)   //test
+            console.log('userController',req.body)   //test
             let { otp, email } = req.body;
             email = email.trim();
             otp = otp.trim();
 
             if (!isValidEmail(email)) {
                 // Validate email format
+                console.log("There si something wrong with the email")
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: "Invalid email format" });
             }
+            console.log('hii')
 
             if (isOtpValid(otp)) {
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: "Invalid OTP" });
             }
 
@@ -115,7 +126,7 @@ class userController {
             console.log(user, "usercotroller");
             if (!user?.success) {
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: user?.message });
             } else {
                 const save = await this.userUsecase.register(user?.user?.user);
@@ -149,8 +160,11 @@ class userController {
                     .json({ success: false, message: "Invalid password" });
             }
 
-            const login = await this.userUsecase.login(email, req.body.password);
-            console.log(login,'login status');
+            const login = await this.userUsecase.login(
+                email,
+                req.body.password
+            );
+            console.log(login, "login status");
             if (login?.success) {
                 res.cookie("token", login?.token || "", {
                     httpOnly: true,
@@ -198,17 +212,52 @@ class userController {
 
             const user = await this.userUsecase.checkEmail(email);
 
-            return res
-                .status(200)
-                .json({
+            if ( user?.success ) {
+                return res.status(200).json({
                     success: true,
-                    message: "Email successfully processed.",
+                    message: "User not found",
                 });
+            } else {
+                return res.status(200).json({
+                    success: false,
+                    message: "Email already exists"
+                })
+            }
         } catch (error) {
             console.error(error);
             return res
                 .status(500)
                 .json({ success: false, message: (error as Error).message });
+        }
+    }
+
+    checkUsername = async ( req: Request, res: Response ) => {
+        try {
+            let username: string | undefined = req.query.username as string;
+
+            username = username.trim();
+            if (username.length === 0) {
+                // Validate username format
+                return res
+                    .status(400)
+                    .json({ success: false, message: "Invalid username" });
+            }
+
+            const user = await this.userUsecase.checkUsername(username);
+
+            if (!user?.success) {
+                return res.status(200).json({
+                    success: false,
+                    message: "Username already exists",
+                });
+            } else {
+                return res.status(200).json({
+                    success: true,
+                    message: "Username not found",
+                });
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 

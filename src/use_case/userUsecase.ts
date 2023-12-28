@@ -4,99 +4,61 @@ import User from "../domain/user";
 import userRepository from "../infrastructure/repository/userRepository";
 // import { verifyOTP } from "../infrastructure/repository/otpRepository";
 // import { verifyEmail } from "./interface/emailService";
-import BcryptPasswordHashingService from './interface/encryptService';
+import BcryptPasswordHashingService from "./interface/encryptService";
 import UserRepository from "../infrastructure/repository/userRepository";
 import JWTService from "./interface/JWTService";
 // import Otp from "../domain/otp";
 // import adminRepository from "../infrastructure/repository/adminRepository";
 
 const encryptService = new BcryptPasswordHashingService();
-const JWT= new JWTService();
+const JWT = new JWTService();
 // const tokenService = new JWTService()
 // const adminrepository = new adminRepository()
 
 class Userusecase {
-    private userRepository: userRepository
+    private userRepository: userRepository;
     constructor(userRepository: userRepository) {
-        this.userRepository = userRepository
+        this.userRepository = userRepository;
     }
 
     async signup(user: User) {
         try {
-            console.log('singup usecase')
-            const emailFound = await this.userRepository.findByEmail(user.email)
-            console.log(emailFound,'email found')
-        if (emailFound?.success) {
-            return {
-                userExitsts: true,
-                status: 400,
-                message: 'User already exists',
-            }
-        }
-        else {
-            return {
-                userExists: false,
-                status: 200,
-                // message: '',
-                // data: registerData.data,
-            }
-        }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    async register(user: User | (Document<unknown, {}, Otp> & Otp & { _id: Types.ObjectId; }) | undefined) {
-        console.log('inside useCase')
-        const save = await this.userRepository.save(user)
-        if (save?.success) {
-            return {
-                status: 200,
-                message: save.message,
-            }
-        }
-        else {
-            return {
-                status: 400,
-                message: 'Error in registration',
-            }
-        }
-    }
-
-    async login ( email: string, password: string) {
-        try {
-            const user = await this.userRepository.login( email)
-            if ( !user ) {
-                return  {
-                    success: false,
-                    message: 'User not found'
-                } 
+            // console.log("singup usecase");
+            const emailFound = await this.userRepository.findByEmail(
+                user.email
+            );
+            // console.log(emailFound, "email found");
+            if (!emailFound?.success) {
+                return {
+                    userExists: true,
+                    status: 400,
+                    message: "Email already exists",
+                };
             } else {
-                console.log(password);
-                
-                const verifyPassword = await encryptService.verifyHashData(password, user?.Password)
-                console.log(verifyPassword,'matches password');
-                
-                if ( verifyPassword ) {
-                    
-                    const token = await JWT.createToken( user.Email, 'user')
-                    
-                    if ( token ) {
-                        return {
-                            success: true,
-                            token
-                        }
-                    } else {
-                        return {
-                            success: false,
-                            message: 'Error in token generation'
-                        }
-                    }
-                } else {
-                    return {
-                        success: false,
-                        message: 'Incorrect password'
-                    }
+                return {
+                    userExists: false,
+                    status: 200,
+                };
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async checkUsername( username: string) {
+        try {
+            console.log('checkUsername')
+            const usernameFound =  await this.userRepository.findByUsername( username )
+            console.log( usernameFound, 'username found')
+            if ( !usernameFound?.success ) {
+                return {
+                    success: false,
+                    message: usernameFound?.message
+                }
+            } else {
+                return {
+                    success: true,
+                    message: usernameFound?.message
                 }
             }
         } catch (error) {
@@ -104,26 +66,89 @@ class Userusecase {
         }
     }
 
-    async checkEmail ( email: string) {
-        try {
-            console.log('email check: usecase')
-        const user = await this.userRepository.findByEmail(email)
-        if (user?.success) {
-            return {
-                status: 400,
-                message: 'User already exists',
-            }
-        } else {
+    async register(
+        user:
+            | User
+            | (Document<unknown, {}, Otp> & Otp & { _id: Types.ObjectId })
+            | undefined
+    ) {
+        console.log("inside useCase");
+        const save = await this.userRepository.save(user);
+        if (save?.success) {
             return {
                 status: 200,
-                message: 'User not found',
-            }
-        }
-        } catch (error) {
-            
+                message: save.message,
+            };
+        } else {
+            return {
+                status: 400,
+                message: "Error in registration",
+            };
         }
     }
 
+    async login(email: string, password: string) {
+        try {
+            const user = await this.userRepository.login(email);
+            if (!user) {
+                return {
+                    success: false,
+                    message: "User not found",
+                };
+            } else {
+                console.log(password);
+
+                const verifyPassword = await encryptService.verifyHashData(
+                    password,
+                    user?.Password
+                );
+                console.log(verifyPassword, "matches password");
+
+                if (verifyPassword) {
+                    const token = await JWT.createToken(user.Email, "user");
+
+                    if (token) {
+                        return {
+                            success: true,
+                            token,
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            message: "Error in token generation",
+                        };
+                    }
+                } else {
+                    return {
+                        success: false,
+                        message: "Incorrect password",
+                    };
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async checkEmail(email: string) {
+        try {
+            console.log("email check: usecase");
+            const user = await this.userRepository.findByEmail( email );
+            if (user?.success) {
+                return {
+                    status: 400,
+                    success: true,
+                    message: "User already exists",
+                };
+            } else {
+                return {
+                    success: false,
+                    status: 200,
+                    message: "User not found",
+                };
+            }
+        } catch (error) {}
+    }
 
     // async signIn(user: User) {
     //     console.log('inside useCase')
@@ -175,7 +200,7 @@ class Userusecase {
     //             message: 'User blocked by admin'
     //         }
     //     }
-    //     //send OTP mail   
+    //     //send OTP mail
     //     const sentMail = await verifyEmail(user.email)
 
     //     return {
@@ -183,7 +208,6 @@ class Userusecase {
     //         message: sentMail.message,
     //     }
     // }
-
 
     // async verifyOTP(user: Otp) {
     //     console.log('inside useCase')
@@ -206,7 +230,6 @@ class Userusecase {
     //         data: User.data,
     //     }
     // }
-
 }
 
-export default Userusecase
+export default Userusecase;

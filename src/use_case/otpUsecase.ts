@@ -39,7 +39,7 @@ class OtpUsecases {
 
     async signUp(user: otp) {
         try {
-            console.log("inside otp signUp");
+            // console.log("inside otp signUp");
             const hashedPassword = await hashService.hashData(user.password); //Hashing password
             user.password = hashedPassword;
             const otp = await otpService(4);
