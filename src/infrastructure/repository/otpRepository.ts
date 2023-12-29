@@ -32,6 +32,30 @@ class OtpRipository {
             }
         }
     }
+
+    async resendOTP ( email: string, otp: string) {
+        try {
+            console.log(email, otp, 'user');
+            
+            const user = await OtpModel.updateOne({ email: email }, { $set: { otp: otp }},{ upsert: true })
+            console.log(user,'userrepository');
+
+            if( user ) {
+                return {
+                    success: true,
+                    message: 'OTP saved successfully'
+                }
+            } else {
+                return {
+                    success: false,
+                    message: 'User not found!'
+                }
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
 }
 
 

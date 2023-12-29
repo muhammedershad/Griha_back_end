@@ -5,9 +5,6 @@ import OtpRepository from "../repository/otpRepository";
 import OtpUsecase from '../../use_case/otpUsecase';
 import express from "express";
 
-import passport from 'passport'; 
-import 
-
 const otpRepository = new OtpRepository()
 const otpUsecase = new OtpUsecase(otpRepository)
 
@@ -25,5 +22,8 @@ router.post('/register', (req, res) => controller.register(req, res));
 router.post('/email', (req, res) => controller.email(req,res))
 router.get('/check-email', (req, res) => controller.checkEmail(req, res))
 router.get('/check-username', (req, res) => controller.checkUsername(req, res))
+router.post('/resend-otp', (req, res) => controller.resendOTP(req, res))
+
+
 
 export default router

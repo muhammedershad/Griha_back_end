@@ -81,6 +81,31 @@ class OtpUsecases {
             console.log(error)
         }
     }
+
+    async resendOTP ( email: string ) {
+        try {
+            const otp = await otpService(4)
+            console.log(otp);
+            const otpSend = await otpEmail(email, otp);
+            console.log(otpSend,'sendotp')
+            if (otpSend.success) {
+                const save = await this.otpRipository.resendOTP( email, otp )
+                if ( save?.success ) {
+                    return {
+                        success: true,
+                        message: 'OTP sent successfully'
+                    }
+                } else {
+                    return {
+                        success: false, 
+                        message: save?.message
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 export default OtpUsecases;

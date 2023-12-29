@@ -37,7 +37,7 @@ var otpSchema: Schema<Otp> = new mongoose.Schema({
     },
     expiresAt: {
         type: Date,
-        default: new Date(Date.now() + 15 * 60 * 1000), // Set default expiration time to 15 minutes
+        default: new Date(Date.now() + 45 * 60 * 1000), // Set default expiration time to 45 minutes
         index: { expires: 0 },
     },
 });

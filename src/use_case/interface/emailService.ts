@@ -53,15 +53,18 @@ export const sendEmail = async (email: string, mailSubject: string, message: str
 
 export const otpEmail = async (email: string, otp: string) => {
     try {
-
+        console.log(
+            'otp email ', email, otp
+        );
+        
         let mailSubject = 'Email Verification'
         let message = `<p>Your Email ID : ${email}</p> <p style ="color:tomato; font-size:25px; letter-spacing:2px;"><b> ${otp}</b></p> 
         <p>This code can be used to verify your email in Griha.
-         The code expire in 15 minutes`
+         The code expire in 5 minutes`
 
         //send OTP as Email
         const sendOtp = await sendEmail(email, mailSubject, message)
-        // console.log('emailService', sendOtp)
+        console.log('emailService', sendOtp)
         return {
             success: true,
             status: sendOtp.status,

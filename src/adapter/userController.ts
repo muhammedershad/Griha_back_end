@@ -40,27 +40,27 @@ class userController {
             if (!isValidName(firstName)) {
                 // Validate email format
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: "Invalid Name" });
             }
 
             if (!isValidEmail(email)) {
                 // Validate email format
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: "Invalid email format" });
             }
 
             if (!isValidPhoneNumber(phone)) {
                 // Validate phone number
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: "Invalid phone number" });
             }
 
             if (!isValidPassword(password)) {
                 // Validate password
-                return res.status(400).json({
+                return res.status(200).json({
                     success: false,
                     message: "Password must be at least 6 characters long",
                 });
@@ -69,7 +69,7 @@ class userController {
             const userExists = await this.userUsecase.signup(req.body);
             // console.log(userExists?.userExists, "user exists");
             if (userExists?.userExists) {
-                return res.status(400).json({
+                return res.status(200).json({
                     success: false,
                     message: "Email already exists",
                 });
@@ -80,7 +80,7 @@ class userController {
             );
             // console.log( usernameExists,'username exists')
             if (!usernameExists?.success) {
-                return res.status(400).json({
+                return res.status(200).json({
                     success: false,
                     message: "Username already exists",
                 });
@@ -150,13 +150,13 @@ class userController {
 
             if (!isValidEmail(email)) {
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: "Invalid email" });
             }
 
             if ((password = "")) {
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: "Invalid password" });
             }
 
@@ -206,7 +206,7 @@ class userController {
             if (!isValidEmail(email)) {
                 // Validate email format
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: "Invalid email format" });
             }
 
@@ -239,7 +239,7 @@ class userController {
             if (username.length === 0) {
                 // Validate username format
                 return res
-                    .status(400)
+                    .status(200)
                     .json({ success: false, message: "Invalid username" });
             }
 
@@ -258,6 +258,36 @@ class userController {
             }
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    resendOTP = async (req: Request, res: Response ) => {
+        try {
+            console.log(req.body )
+            let { email } = req.body;
+
+            if (!isValidEmail(email)) {
+                return res
+                    .status(200)
+                    .json({ success: false, message: "Invalid email" });
+            } else {
+                console.log('usercontroller resendotp')
+                const resendOTP = await this.otpusecase.resendOTP( email )
+                console.log( resendOTP )
+                if ( resendOTP?.success ) {
+                    res.status(200).json({
+                        success: true,
+                        message: resendOTP.message
+                    })
+                } else {
+                    res.status(200).json({
+                        success: false,
+                        message: resendOTP?.message
+                    })
+                }
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 
