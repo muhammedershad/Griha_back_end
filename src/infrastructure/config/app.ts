@@ -1,10 +1,11 @@
 import userRouter from "../route/userRoute";
-// import adminRouter from '../route/adminRoute'
+import adminRouter from '../route/adminRoute'
 // import tutorRouter from '../route/employeeRoute'
 import express from "express";
 import path from "path";
 import logger from "morgan";
 import cors from "cors";
+import cookieParser  from "cookie-parser"
 
 //passport
 const passport = require("passport");
@@ -26,6 +27,7 @@ export const createServer = () => {
     try {
         app.use(express.json());
 
+        app.use(cookieParser());
         app.use(logger("dev"));
         app.use(express.urlencoded({ extended: false }));
         app.use(express.static(path.join(__dirname, "public")));
@@ -55,7 +57,7 @@ export const createServer = () => {
 
         // Routes
         app.use("/api/user", userRouter);
-        // app.use('/api/admin', adminRouter)
+        app.use('/api/admin', adminRouter)
         // app.use('/api/tutor', tutorRouter)
 
         //test Route

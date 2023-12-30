@@ -1,16 +1,14 @@
-// import adminController from "../../adapter/adminController";
-// import adminRepository from "../repository/adminRepository";
-// import adminUsecase from "../../use_case/adminUsecase";
-// import express from "express";
-// import { adminJwtAuth } from "../../adapter/middlewares/adminMiddleware";
+import express from "express";
+import adminController from "../../adapter/adminController";
+import AdminAuthUsecase from "../../use_case/adminAuthUsecase";
+import AdminAuthRepository from "../repository/adminAuthRepository";
 
-// const repository = new adminRepository()
-// const useCase = new adminUsecase(repository)
-// const adminControl = new adminController(useCase)
+const repository = new AdminAuthRepository()
+const useCase = new AdminAuthUsecase( repository )
+const adminControl = new adminController(useCase)
 
-// const router = express.Router()
+const router = express.Router()
 
-// router.post('/listUsers', adminJwtAuth, (req, res) => adminControl.listUserControl(req, res));
+router.post('/login', (req, res) => adminControl.login(req, res));
 
-
-// export default router
+export default router

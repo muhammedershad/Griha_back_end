@@ -102,15 +102,17 @@ class Userusecase {
                     password,
                     user?.Password
                 );
-                console.log(verifyPassword, "matches password");
-
+                
+                user.Password = ''
+                
                 if (verifyPassword) {
                     const token = await JWT.createToken(user.Email, "user");
-
+                    
                     if (token) {
                         return {
                             success: true,
                             token,
+                            user
                         };
                     } else {
                         return {

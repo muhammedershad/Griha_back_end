@@ -9,6 +9,7 @@ import {
     isOtpValid,
 } from "../use_case/interface/validations";
 import { sendEmail } from "../use_case/interface/emailService";
+import user from "../domain/user";
 
 class userController {
     private userUsecase: Userusecase;
@@ -175,6 +176,8 @@ class userController {
                 return res.status(200).json({
                     success: true,
                     message: "login successful",
+                    user: login?.user,
+                    token: login?.token
                 });
             } else {
                 return res
