@@ -3,10 +3,10 @@ import JWTService from "../../use_case/interface/JWTService";
 
 const jwt = new JWTService();
 
-const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+const adminAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.cookies.token;
-        // console.log(token);
+        console.log(token);
 
         if (!token) {
             return res.status(401).json({
@@ -17,8 +17,8 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
        
         // Verify the token
         const auth = await jwt.verifyToken(token);
-        // console.log(auth)
-        if (!auth.success || auth.role !== 'user') {
+        console.log(auth)
+        if (!auth.success || auth.role !== 'admin') {
             return res.status(401).json({
                 success: false,
                 message: "Unauthorized Request",
@@ -36,4 +36,4 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
     }
 };
 
-export default authMiddleware;
+export default adminAuthMiddleware;

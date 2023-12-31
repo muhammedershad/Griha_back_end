@@ -1,4 +1,4 @@
-import { Document, Types } from "mongoose";
+import { Document, ObjectId, Schema, Types } from "mongoose";
 import Otp from "../domain/otp";
 import User from "../domain/user";
 import userRepository from "../infrastructure/repository/userRepository";
@@ -7,6 +7,7 @@ import userRepository from "../infrastructure/repository/userRepository";
 import BcryptPasswordHashingService from "./interface/encryptService";
 import UserRepository from "../infrastructure/repository/userRepository";
 import JWTService from "./interface/JWTService";
+import { ParsedQs } from "qs";
 // import Otp from "../domain/otp";
 // import adminRepository from "../infrastructure/repository/adminRepository";
 
@@ -96,7 +97,13 @@ class Userusecase {
                     message: "User not found",
                 };
             } else {
-                console.log(password);
+                // console.log(password);
+                if ( user.IsBlocked ) {
+                    return {
+                        success: false,
+                        message: "User is blocked by admin",
+                    };
+                }
 
                 const verifyPassword = await encryptService.verifyHashData(
                     password,
@@ -104,8 +111,8 @@ class Userusecase {
                 );
                 
                 user.Password = ''
-                
-                if (verifyPassword) {
+
+                if ( verifyPassword ) {
                     const token = await JWT.createToken(user.Email, "user");
                     
                     if (token) {
@@ -152,86 +159,43 @@ class Userusecase {
         } catch (error) {}
     }
 
-    // async signIn(user: User) {
-    //     console.log('inside useCase')
-    //     const userFound = await this.userRepository.findByEmail(user.email)
-    //     if (userFound) {
-    //         if (userFound.data.isBlocked) {
-    //             return {
-    //                 status: 400,
-    //                 message: 'User blocked by admin'
-    //             }
-    //         }
-    //         const hashed = userFound.data.password
-    //         const isValid = await encryptService.verifyHashData(user.password, hashed)  //not working
-    //         console.log(isValid)
-    //         if (!isValid) {
-    //             return {
-    //                 status: 400,
-    //                 message: 'Invalid Credentials'
-    //             }
-    //         }
-    //         const token = await tokenService.createToken(userFound.data._id, userFound.data.role)
-    //         // console.log(token)
-    //         return {
-    //             status: 200,
-    //             message: 'Valid User',
-    //             data: userFound.data,
-    //             token: token,
-    //         }
-    //     } else {
-    //         return {
-    //             status: 400,
-    //             message: 'Invalid Credentials'
-    //         }
-    //     }
-    // }
+    async changeIsBlockStatus ( userId: string | Schema.Types.ObjectId | string[] | ParsedQs | ParsedQs[] ) {
+        try {
+            const userBlocking = await this.userRepository.changeIsBlock( userId )
+            return userBlocking
+        } catch (error) {
+            console.log(error);   
+        }
+    }
 
-    // async sendOTP(user: User) {
-    //     console.log('inside useCase')
-    //     const userFound = await this.userRepository.findByEmail(user.email)
-    //     if (!userFound) {         //unregistered user
-    //         return {
-    //             status: 400,
-    //             message: 'Email not registered'
-    //         }
-    //     }
-    //     if (userFound.data.isBlocked) {
-    //         return {
-    //             status: 400,
-    //             message: 'User blocked by admin'
-    //         }
-    //     }
-    //     //send OTP mail
-    //     const sentMail = await verifyEmail(user.email)
+    async users () {
+        try {
+            const users = await this.userRepository.users()
+            if ( users ) {
+                return {
+                    success: true,
+                    users: users
+                }
+            } else {
+                return {
+                    success: false,
+                    message: "User data not found"
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-    //     return {
-    //         status: sentMail.status,
-    //         message: sentMail.message,
-    //     }
-    // }
-
-    // async verifyOTP(user: Otp) {
-    //     console.log('inside useCase')
-    //     return await verifyOTP(user.email, user.otp)
-    // }
-
-    // async tokenDecode(data: { token: string }) {
-    //     console.log('inside useCase')
-    //     if (!data.token) return {
-    //         status: 401,
-    //         message: 'Token misssing, Please login again',
-    //     }
-    //     const response = await tokenService.verifyToken(data.token)
-    //     const _id = response?.data?.userData
-    //     const User = await adminrepository.findById(_id)
-    //     console.log(User)
-    //     return {
-    //         status: 200,
-    //         message: User.message,
-    //         data: User.data,
-    //     }
-    // }
+    async chageUserRole ( userId: string | Schema.Types.ObjectId | string[] | ParsedQs | ParsedQs[] ) {
+        try {
+            const response = await this.userRepository.chageUserRole( userId )
+            return response
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
 }
 
 export default Userusecase;

@@ -10,7 +10,7 @@ export interface IUsers extends Document {
   Email: string;
   Image: string | null;
   Client: boolean;
-  IdBlocked: boolean;
+  IsBlocked: boolean;
   CreatedAt: Date;
 }
 

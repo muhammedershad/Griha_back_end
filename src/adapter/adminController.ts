@@ -9,8 +9,9 @@ class AdminController {
 
     async login(req: Request, res: Response) {
         try {
-            let { username, password } = req.body;
-            console.log( req.body )
+            let { email, password } = req.body;
+            const username = email
+            // console.log( req.body )
 
             if (!username || !password ) {
                 return res.status(401).json({

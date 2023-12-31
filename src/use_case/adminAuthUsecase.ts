@@ -19,7 +19,7 @@ class AdminAuthUsecase {
                 const match = await bycrypt.verifyHashData( password, admin?.password )
                 if ( match ) {
                     const token = await jwt.createToken( admin?.username, 'admin' )
-                    console.log( token )
+                    // console.log( token )
                     return {
                         success: true,
                         token,
@@ -39,8 +39,7 @@ class AdminAuthUsecase {
             }
 
         } catch (error) {
-            console.log(error);
-            
+            console.log(error); 
         }
     }
 }

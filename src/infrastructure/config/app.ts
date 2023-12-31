@@ -49,7 +49,7 @@ export const createServer = () => {
 
         const corsOptions = {
             origin: "http://localhost:8080", // Replace with the actual origin of your client
-            methods: "GET, POST, OPTIONS", // Include the necessary HTTP methods
+            methods: "GET, POST, OPTIONS, PATCH, PUT", // Include the necessary HTTP methods
             credentials: true, // Allow credentials (cookies)
             optionsSuccessStatus: 204, // Set the preflight response status to 204
         };

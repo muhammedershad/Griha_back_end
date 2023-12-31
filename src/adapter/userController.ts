@@ -10,6 +10,8 @@ import {
 } from "../use_case/interface/validations";
 import { sendEmail } from "../use_case/interface/emailService";
 import user from "../domain/user";
+import { ParsedQs } from "qs";
+import { ObjectId } from "mongoose";
 
 class userController {
     private userUsecase: Userusecase;
@@ -143,7 +145,7 @@ class userController {
 
     async login(req: Request, res: Response) {
         try {
-            console.log(req.body);
+            // console.log(req.body);
             let { email, password } = req.body;
 
             email = email.trim();
@@ -186,6 +188,10 @@ class userController {
             }
         } catch (error) {
             console.log(error);
+            res.status(500).json({
+                success: false,
+                message: (error as Error)?.message,
+            })
         }
     }
 
@@ -261,6 +267,10 @@ class userController {
             }
         } catch (error) {
             console.log(error)
+            res.status(500).json({
+                success: false,
+                message: (error as Error)?.message,
+            })
         }
     }
 
@@ -291,52 +301,89 @@ class userController {
             }
         } catch (error) {
             console.log(error);
+            res.status(500).json({
+                success: false,
+                message: (error as Error)?.message,
+            })
         }
     }
 
-    // async signIn(req: Request, res: Response) {
-    //     try {
-    //         console.log('userController')
-    //         const user = await this.usercase.signIn(req.body)
-    //         res.status(user.status).json(user)
-    //     } catch (error) {
-    //         console.log(error)
-    //         return res.status(500).json({ success: false, message: (error as Error).message });
-    //     }
-    // }
+    async blockUser ( req: Request, res: Response ) {
+        try {
+            const userId = req.query.userId
+            if ( !userId ) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'invalid user id'
+                })
+            }
 
-    // async sendOTP(req: Request, res: Response) {
-    //     try {
-    //         console.log('userController')
-    //         const response = await this.usercase.sendOTP(req.body)
-    //         res.status(response.status).json(response)
-    //     } catch (error) {
-    //         console.log(error)
-    //         return res.status(500).json({ success: false, message: (error as Error).message });
-    //     }
-    // }
+            const changeIsBlockStatus = await this.userUsecase.changeIsBlockStatus( userId )
+            if ( changeIsBlockStatus?.success ) {
+                res.status(200).json({
+                    success: true,
+                    user: changeIsBlockStatus.user,
+                    message: changeIsBlockStatus.message
+                })
+            } else {
+                res.status(200).json({
+                    success: false,
+                    message: changeIsBlockStatus?.message
+                })
+            }
 
-    // async verifyOTP(req: Request, res: Response) {
-    //     try {
-    //         console.log('userController')
-    //         const response = await this.usercase.verifyOTP(req.body)
-    //         res.status(response.status).json(response)
-    //     } catch (error) {
-    //         console.log(error)
-    //         return res.status(500).json({ success: false, message: (error as Error).message });
-    //     }
-    // }
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                success: false,
+                message: (error as Error)?.message,
+            })
+        }
+    }
 
-    // async tokenDecode(req: Request, res: Response) {
-    //     try {
-    //         console.log('userController')
-    //         const response = await this.usercase.tokenDecode(req.body)
-    //         res.status(response.status).json(response)
-    //     } catch (error) {
-    //         console.log(error)
-    //         return res.status(500).json({ success: false, message: (error as Error).message });
-    //     }
-    // }
+    async users ( req: Request, res: Response) {
+        try {
+            const users = await this.userUsecase.users()
+            res.status(200).json({users})
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: (error as Error)?.message,
+            })
+        }
+    }
+
+    async changeUserRole ( req: Request, res: Response ) {
+        try {
+            const userId = req.query.userId
+            if ( !userId ) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'invalid user id'
+                })
+            }
+            const changeUserRole = await this.userUsecase.chageUserRole( userId )
+            if ( changeUserRole?.success ) {
+                res.status(200).json({
+                    success: true,
+                    user: changeUserRole.user
+                })
+            } else {
+                res.status(200).json({
+                    success: false,
+                    message: changeUserRole?.message
+                })
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: (error as Error)?.message,
+            })
+        }
+    }
 }
 
 export default userController;

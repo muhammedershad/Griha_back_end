@@ -8,7 +8,7 @@ interface User {
     phone: string,
     password: string,
     image: string,
-    isBlocked: boolean,
+    IsBlocked: boolean,
     username: string,
     address: {
         streetAddress: string,
@@ -22,9 +22,3 @@ interface User {
 }
 
 export default User
-
-
-
-export interface QueryType extends Document {
-    tutorId: ObjectId;
-}
