@@ -104,3 +104,32 @@ export const verifyEmail = async (email: string) => {
     }
 
 }
+
+export const employeeInvitationMail = async ( email: string ) => {
+    try {
+        let mailSubject = 'Job Letter'
+        let message = `
+  <div style="font-family: 'Arial', sans-serif; color: #333; max-width: 500px; margin: 0 auto; padding: 20px; background-color: #f8f8f8; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <h2 style="color: #3498db;">Welcome to Griha Family!</h2>
+    <p>Now you can log in to the employee portal of Griha using the following credentials:</p>
+    <ul style="list-style-type: none; padding: 0;">
+      <li><strong>Email:</strong> ${email}</li>
+      <li><strong>Password:</strong> Griha@123</li>
+    </ul>
+    <p>After logging in, please change your password and update your profile for further proceedings.</p>
+    <p style="margin-top: 20px; font-size: 14px;">Thank you for joining Griha!</p>
+  </div>
+`;
+
+        //send OTP as Email
+        const jobLetterSend = await sendEmail(email, mailSubject, message)
+        // console.log('emailService', sendOtp)
+        return {
+            status: jobLetterSend.status,
+            message: jobLetterSend.message
+        }
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
