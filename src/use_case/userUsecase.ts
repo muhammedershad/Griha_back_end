@@ -48,9 +48,9 @@ class Userusecase {
 
     async checkUsername( username: string) {
         try {
-            console.log('checkUsername')
+            // console.log('checkUsername')
             const usernameFound =  await this.userRepository.findByUsername( username )
-            console.log( usernameFound, 'username found')
+            // console.log( usernameFound, 'username found')
             if ( !usernameFound?.success ) {
                 return {
                     success: false,
@@ -73,7 +73,7 @@ class Userusecase {
             | (Document<unknown, {}, Otp> & Otp & { _id: Types.ObjectId })
             | undefined
     ) {
-        console.log("inside useCase");
+        // console.log("inside useCase");
         const save = await this.userRepository.save(user);
         if (save?.success) {
             return {
@@ -141,7 +141,7 @@ class Userusecase {
 
     async checkEmail(email: string) {
         try {
-            console.log("email check: usecase");
+            // console.log("email check: usecase");
             const user = await this.userRepository.findByEmail( email );
             if (user?.success) {
                 return {

@@ -1,5 +1,6 @@
 import EmployeeModel, { IEmployees } from '../database/employeeModel'
-import { ObjectId } from 'mongoose'
+import { ObjectId, Schema } from 'mongoose'
+import { ParsedQs } from "qs";
 
 class EmployeeRepository {
 
@@ -10,16 +11,97 @@ class EmployeeRepository {
                 email: employee.email,
                 jobRole: employee.jobRole,
                 password: employee.password,
-                department: employee.department
+                department: employee.department,
             })
             const success = await newEmployee.save()
+            // console.log(success,'repository');
+            
             return success
         } catch (error) {
-            return {
-                status: 500,
-                success: false,
-                message: (error as Error).message
+            // return {
+            //     status: 500,
+            //     success: false,
+            //     message: (error as Error).message
+            // }
+            console.log(error);
+            
+        }
+    }
+
+    async login(email: string) {
+        try {
+            const user = await EmployeeModel.findOne({ email: email });
+            return user;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async allEmployees() {
+        try {
+            const employees = await EmployeeModel.find()
+            return employees
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    async changeIsBlock ( userId: string | Schema.Types.ObjectId | string[] | ParsedQs | ParsedQs[]  ) {
+        try {
+            const employee = await EmployeeModel.findById( userId )
+            if ( employee ) {
+                employee.isBlocked = !employee.isBlocked;
+                const success = await employee.save()
+                if ( success ) {
+                    return {
+                        success: true,
+                        message: ` ${employee.isBlocked ? 'Unblocked' : 'Blocked'} user`,
+                        employee: employee
+                    }
+                } else {
+                    return {
+                        success: false,
+                        message: `Error in ${employee.isBlocked ? 'unblocking' : 'blocking'} employee`
+                    }
+                }
+            } else {
+                return {
+                    success: false,
+                    message: 'Employee not found'
+                }
             }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async chageEmployeeRole( employeeId: string | Schema.Types.ObjectId | string[] | ParsedQs | ParsedQs[] ) {
+        try {
+            const employee = await EmployeeModel.findById( employeeId )
+            if ( employee ) {
+                employee.isSenior = !employee.isSenior;
+                const success = await employee.save()
+                if ( success ) {
+                    return {
+                        success: true,
+                        message: `Employee role changed`,
+                        employee: employee
+                    }
+                } else {
+                    return {
+                        success: false,
+                        message: `Error in employee role change`
+                    }
+                }
+            } else {
+                return {
+                    success: false,
+                    message: 'Employee not found'
+                }
+            }
+        } catch (error) {
+            console.log(error); 
         }
     }
 

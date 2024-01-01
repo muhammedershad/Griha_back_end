@@ -1,7 +1,13 @@
+import { ObjectId, Schema } from "mongoose"
 import { IEmployees } from "../domain/employee"
 import EmployeeRepository from "../infrastructure/repository/employeeRepository"
 import { employeeInvitationMail } from "./interface/emailService"
+import BcryptPasswordHashingService from "./interface/encryptService"
+import JWTService from "./interface/JWTService"
+import { ParsedQs } from "qs";
 
+const encryptService = new BcryptPasswordHashingService();
+const JWT = new JWTService()
 
 class EmployeeUsecase {
     private employeeRepository: EmployeeRepository
@@ -11,10 +17,14 @@ class EmployeeUsecase {
 
     async register ( employee: IEmployees) {
         try {
+            const hashpass = await encryptService.hashData( employee.password )
+            employee.password = hashpass
             const response = await this.employeeRepository.register( employee )
+            // console.log(response);
+            
             if ( response ) {
                 const mailSend = await employeeInvitationMail( employee.email )
-                console.log(mailSend);
+                // console.log(mailSend);
                 
                 if ( mailSend?.status) {
                     return {
@@ -33,6 +43,96 @@ class EmployeeUsecase {
                     message: 'Error in employee registration'
                 }
             }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    async login(email: string, password: string) {
+        try {
+            const user = await this.employeeRepository.login(email);
+            if (!user) {
+                return {
+                    success: false,
+                    message: "User not found",
+                };
+            } else {
+                // console.log(password);
+                if ( user?.isBlocked ) {
+                    return {
+                        success: false,
+                        message: "User is blocked by admin",
+                    };
+                }
+
+                const verifyPassword = await encryptService.verifyHashData(
+                    password,
+                    user?.password
+                );
+                
+                user.password = ''
+
+                if ( verifyPassword ) {
+                    const token = await JWT.createToken(user.email, "employee");
+                    
+                    if (token) {
+                        return {
+                            success: true,
+                            token,
+                            user
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            message: "Error in token generation",
+                        };
+                    }
+                } else {
+                    return {
+                        success: false,
+                        message: "Incorrect password",
+                    };
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async allEmployees () {
+        try {
+            const allEmployees = await this.employeeRepository.allEmployees()
+            if ( allEmployees ) {
+                return {
+                    success: true,
+                    allEmployees: allEmployees
+                }
+            } else {
+                return {
+                    success: false,
+                    message: 'Error in fetching employees data'
+                }
+            }
+        } catch (error) {
+            console.log(error);
+            throw new Error
+        }
+    }
+
+    async changeIsBlockStatus ( employeeId: string | Schema.Types.ObjectId | string[] | ParsedQs | ParsedQs[] ) {
+        try {
+            const employeeBlocking = await this.employeeRepository.changeIsBlock( employeeId )
+            return employeeBlocking
+        } catch (error) {
+            console.log(error);   
+        }
+    }
+
+    async chageEmployeeRole ( employeeId: string | Schema.Types.ObjectId | string[] | ParsedQs | ParsedQs[] ) {
+        try {
+            const response = await this.employeeRepository.chageEmployeeRole( employeeId )
+            return response
         } catch (error) {
             console.log(error);
             

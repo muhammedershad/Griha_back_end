@@ -1,5 +1,8 @@
 import EmployeeUsecase from "../use_case/employeeUsecase";
 import { Request, Response } from "express-serve-static-core";
+import { isValidEmail } from "../use_case/interface/validations";
+import { ObjectId, Schema } from "mongoose";
+
 
 class EmployeeController {
     private employeeUsecase: EmployeeUsecase
@@ -16,13 +19,18 @@ class EmployeeController {
                     message: "Insufficent data"
                 })
             }
-            const employee = this.employeeUsecase.register( req.body )
-            console.log(employee);
+            const employee = await this.employeeUsecase.register( req.body )
+            // console.log(employee);
             
-            if ( employee.success ) {
+            if ( employee?.success ) {
                 res.status(200).json({
                     success: true,
                     message: employee.message
+                })
+            } else {
+                res.status(200).json({
+                    success: false,
+                    message: employee?.message
                 })
             }
         } catch (error) {
@@ -30,6 +38,162 @@ class EmployeeController {
             res.status(500).json({
                 success: false,
                 message: (error as Error).message  
+            })
+        }
+    }
+
+    async login(req: Request, res: Response) {
+        try {
+            // console.log(req.body);
+            let { email, password } = req.body;
+
+            email = email.trim();
+            password = password.trim();
+
+            if (!isValidEmail(email)) {
+                return res
+                    .status(200)
+                    .json({ success: false, message: "Invalid email" });
+            }
+
+            if ((password = "")) {
+                return res
+                    .status(200)
+                    .json({ success: false, message: "Invalid password" });
+            }
+
+            const login = await this.employeeUsecase.login(
+                email,
+                req.body.password
+            );
+            // console.log(login, "login status");
+            if (login?.success) {
+                res.cookie("token", login?.token || "", {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: "strict",
+                    // credentials: "include",
+                });
+                return res.status(200).json({
+                    success: true,
+                    message: "login successful",
+                    user: login?.user,
+                    token: login?.token
+                });
+            } else {
+                return res
+                    .status(200)
+                    .json({ success: false, message: login?.message });
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: (error as Error)?.message,
+            })
+        }
+    }
+
+    async allEmployees ( req: Request, res: Response ) {
+        try {
+            const allEmployees = await this.employeeUsecase.allEmployees()
+            if ( allEmployees.success ) {
+                return res.status(200).json({
+                    success: true,
+                    allEmployees: allEmployees?.allEmployees
+                })
+            } else {
+                return res.status(200).json({
+                    success: false,
+                    message: allEmployees.message
+                })
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: (error as Error)?.message,
+            })
+        }
+    }
+
+    async blockEmployee ( req: Request, res: Response ) {
+        try {
+            const employeeId = req.query.employeeId
+            if ( !employeeId ) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'invalid employee id'
+                })
+            }
+
+            const changeIsBlockStatus = await this.employeeUsecase.changeIsBlockStatus( employeeId )
+            if ( changeIsBlockStatus?.success ) {
+                res.status(200).json({
+                    success: true,
+                    user: changeIsBlockStatus.employee,
+                    message: changeIsBlockStatus.message
+                })
+            } else {
+                res.status(200).json({
+                    success: false,
+                    message: changeIsBlockStatus?.message
+                })
+            }
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                success: false,
+                message: (error as Error)?.message,
+            })
+        }
+    }
+
+    async changeEmployeeRole ( req: Request, res: Response ) {
+        try {
+            const employeeId = req.query.employeeId
+            if ( !employeeId ) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'invalid employee id'
+                })
+            }
+            const changeEmployeeRole = await this.employeeUsecase.chageEmployeeRole( employeeId )
+            if ( changeEmployeeRole?.success ) {
+                res.status(200).json({
+                    success: true,
+                    employee: changeEmployeeRole.employee
+                })
+            } else {
+                res.status(200).json({
+                    success: false,
+                    message: changeEmployeeRole?.message
+                })
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: (error as Error)?.message,
+            })
+        }
+    }
+
+    async logout ( req: Request, res: Response ) {
+        try {
+            res.clearCookie('employeeCookie');
+
+            res.status(200).json({
+                success: true,
+                message: 'Logout successful'
+            })
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in logout'
             })
         }
     }

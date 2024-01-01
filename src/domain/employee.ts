@@ -9,7 +9,7 @@ export interface IEmployees extends Document {
     department: string;
     experience: number;
     jobRole: string;
-    joinDate: Date;
+    joinedDate: Date;
     username: string;
     email: string;
     teamLead: boolean;

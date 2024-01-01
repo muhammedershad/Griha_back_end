@@ -16,27 +16,6 @@ class OtpUsecases {
         this.otpRipository = otpRipository;
     }
 
-    // async register(otp: otp) {
-    //     console.log('inside useCase')
-    //     const emailFound = await this.otpRipository.findByEmail(user.email)
-    //     if (emailFound?.success) {
-    //         return {
-    //             status: 400,
-    //             message: 'User already exists',
-    //         }
-    //     }
-    //     else {
-    //         const hashedPassword = await encryptService.hashData(user.password) //Hashing password
-    //         user.password = hashedPassword
-    //         const registerData = await this.userRepository.save(user)
-    //         return {
-    //             status: 200,
-    //             message: registerData.message,
-    //             data: registerData.data,
-    //         }
-    //     }
-    // }
-
     async signUp(user: otp) {
         try {
             // console.log("inside otp signUp");
@@ -57,7 +36,7 @@ class OtpUsecases {
     async register (email: string, otp: string) {
         try {
             const user = await this.otpRipository.verifyOTP(email)
-            console.log(user,'otpusecase')
+            // console.log(user,'otpusecase')
 
             if (user.success) {
                 if (user.user?.otp === otp) {
@@ -87,7 +66,7 @@ class OtpUsecases {
             const otp = await otpService(4)
             console.log(otp);
             const otpSend = await otpEmail(email, otp);
-            console.log(otpSend,'sendotp')
+            // console.log(otpSend,'sendotp')
             if (otpSend.success) {
                 const save = await this.otpRipository.resendOTP( email, otp )
                 if ( save?.success ) {

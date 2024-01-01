@@ -26,9 +26,10 @@ router.get('/check-email', (req, res) => controller.checkEmail(req, res))
 router.get('/check-username', (req, res) => controller.checkUsername(req, res))
 router.post('/resend-otp', (req, res) => controller.resendOTP(req, res))
 router.get('/test', authMiddleware, (req, res) => controller.resendOTP(req, res))
-router.get('/users', ( req, res ) => controller.users( req, res ))
+router.get('/users', adminAuthMiddleware, ( req, res ) => controller.users( req, res ))
 router.patch('/block-user', adminAuthMiddleware, ( req, res ) => controller.blockUser( req, res ))
-router.patch( '/change-user-role', ( req, res ) => controller.changeUserRole( req, res ))
+router.patch( '/change-user-role', adminAuthMiddleware, ( req, res ) => controller.changeUserRole( req, res ))
+router.post( '/logout', ( req, res ) => controller.logout( req, res ))
 
 
 export { controller }

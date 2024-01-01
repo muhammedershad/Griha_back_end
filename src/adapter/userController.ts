@@ -23,7 +23,7 @@ class userController {
 
     async signUp(req: Request, res: Response) {
         try {
-            console.log("userController", req.body); //test
+            // console.log("userController", req.body); //test
 
             let { firstName, lastName, email, phone, password, username } =
                 req.body;
@@ -117,7 +117,7 @@ class userController {
                     .status(200)
                     .json({ success: false, message: "Invalid email format" });
             }
-            console.log('hii')
+            // console.log('hii')
 
             if (isOtpValid(otp)) {
                 return res
@@ -126,7 +126,7 @@ class userController {
             }
 
             const user = await this.otpusecase.register(email, otp);
-            console.log(user, "usercotroller");
+            // console.log(user, "usercotroller");
             if (!user?.success) {
                 return res
                     .status(200)
@@ -167,9 +167,9 @@ class userController {
                 email,
                 req.body.password
             );
-            console.log(login, "login status");
+            // console.log(login, "login status");
             if (login?.success) {
-                res.cookie("token", login?.token || "", {
+                res.cookie("user_token", login?.token || "", {
                     httpOnly: true,
                     secure: true,
                     sameSite: "strict",
@@ -276,7 +276,7 @@ class userController {
 
     resendOTP = async (req: Request, res: Response ) => {
         try {
-            console.log(req.body )
+            // console.log(req.body )
             let { email } = req.body;
 
             if (!isValidEmail(email)) {
@@ -284,9 +284,9 @@ class userController {
                     .status(200)
                     .json({ success: false, message: "Invalid email" });
             } else {
-                console.log('usercontroller resendotp')
+                // console.log('usercontroller resendotp')
                 const resendOTP = await this.otpusecase.resendOTP( email )
-                console.log( resendOTP )
+                // console.log( resendOTP )
                 if ( resendOTP?.success ) {
                     res.status(200).json({
                         success: true,
@@ -381,6 +381,23 @@ class userController {
             res.status(500).json({
                 success: false,
                 message: (error as Error)?.message,
+            })
+        }
+    }
+
+    async logout ( req: Request, res: Response ) {
+        try {
+            res.clearCookie('userCookie');
+
+            res.status(200).json({
+                success: true,
+                message: 'Logout successful'
+            })
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in logout'
             })
         }
     }

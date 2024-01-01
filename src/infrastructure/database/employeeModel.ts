@@ -9,7 +9,7 @@ export interface IEmployees extends Document {
     department: string;
     experience: number;
     jobRole: string;
-    joinDate: Date;
+    joinedDate: Date;
     username: string;
     email: string;
     teamLead: boolean;
@@ -21,12 +21,12 @@ const EmployeesSchema: Schema = new Schema({
     lastName: { type: String },
     firstName: { type: String, required: true },
     password: { type: String, required: true },
-    phone: { type: Number, required: true },
+    phone: { type: Number },
     department: { type: String, required: true },
     experience: { type: Number },
     jobRole: { type: String, required: true },
-    joinDate: { type: Date, required: true },
-    username: { type: String, unique: true },
+    joinedDate: { type: Date, required: true, default: new Date() },
+    username: { type: String},
     email: { type: String, required: true, unique: true },
     teamLead: { type: Boolean, required: true, default: false },
     isBlocked: { type: Boolean, required: true, default: false },

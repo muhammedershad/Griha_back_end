@@ -53,9 +53,9 @@ class UserRepository {
 
     async findByUsername(username: string) {
         try {
-            console.log(username, "checking username");
+            // console.log(username, "checking username");
             const user = await UserModel.findOne({ Username: username });
-            console.log(user, "user");
+            // console.log(user, "user");
             if (user) {
                 return {
                     success: false,
@@ -73,7 +73,7 @@ class UserRepository {
     }
 
     async findByPhone(phone: string) {
-        console.log("phone exist check");
+        // console.log("phone exist check");
         const existingUser = await UserModel.findOne({ phone });
         if (existingUser) {
             return {

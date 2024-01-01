@@ -1,6 +1,6 @@
 import userRouter from "../route/userRoute";
 import adminRouter from '../route/adminRoute'
-// import tutorRouter from '../route/employeeRoute'
+import employeeRouter from '../route/employeeRoute'
 import express from "express";
 import path from "path";
 import logger from "morgan";
@@ -58,55 +58,13 @@ export const createServer = () => {
         // Routes
         app.use("/api/user", userRouter);
         app.use('/api/admin', adminRouter)
-        // app.use('/api/tutor', tutorRouter)
+        app.use('/api/employee', employeeRouter)
 
         //test Route
         app.get("/", (req, res) =>
             res.status(200).json({ message: "API running successfully" })
         );
 
-
-
-
-
-
-        // app.use(cookieSession({ 
-        //     name: 'google-auth-session', 
-        //     keys: ['key1', 'key2'] 
-        // })); 
-        // app.use(passport.initialize()); 
-        // app.use(passport.session()); 
-
-        // // Auth
-        // app.get(
-        //     "/auth",
-        //     passport.authenticate("google", { scope: ["email", "profile"] })
-        // );
-
-        // // Auth Callback
-        // app.get(
-        //     "/auth/callback",
-        //     passport.authenticate("google", {
-        //         successRedirect: "/auth/callback/success",
-        //         failureRedirect: "/auth/callback/failure",
-        //     })
-        // );
-
-        // // Success
-        // app.get("/auth/callback/success", (req, res) => {
-        //     if (!req.user) res.redirect("/auth/callback/failure");
-        //     res.send("Welcome " + req.user);
-        // });
-
-        // // failure
-        // app.get("/auth/callback/failure", (req, res) => {
-        //     res.send("Error");
-        // });
-
-
-
-
-        
 
         return app;
     } catch (error) {

@@ -17,9 +17,9 @@ class OtpRipository {
     }
 
     verifyOTP = async (email: string) => {
-        console.log(email,'userrepository-email')
+        // console.log(email,'userrepository-email')
         const user = await OtpModel.findOne({email : email})
-        console.log(user)
+        // console.log(user)
         if(user) {
             return {
                 success : true,
@@ -35,10 +35,10 @@ class OtpRipository {
 
     async resendOTP ( email: string, otp: string) {
         try {
-            console.log(email, otp, 'user');
+            // console.log(email, otp, 'user');
             
             const user = await OtpModel.updateOne({ email: email }, { $set: { otp: otp }},{ upsert: true })
-            console.log(user,'userrepository');
+            // console.log(user,'userrepository');
 
             if( user ) {
                 return {
@@ -57,37 +57,5 @@ class OtpRipository {
         }
     }
 }
-
-
-// export const verifyOTP = async (email: string, otp: string) => {
-//     const savedOtp = await OtpModel.findOne({ email });
-//     if (savedOtp?.otp === otp) {
-//         const existingUser = await UserModel.findOne({ email })
-//         if (!existingUser) {
-//             return {
-//                 status: 400,
-//                 message: 'User not found'
-//             }
-//         }
-//         if (existingUser.IdBlocked) {
-//             return {
-//                 status: 400,
-//                 message: 'User blocked by admin'
-//             }
-//         }
-//         const token = await tokenService.createToken(existingUser._id, existingUser.role)
-//         return {
-//             status: 200,
-//             data: existingUser,
-//             token: token,
-//             message: 'User details found in database'
-//         }
-//     } else {
-//         return {
-//             status: 400,
-//             message: 'Incorrect OTP'
-//         }
-//     }
-// }
 
 export default OtpRipository

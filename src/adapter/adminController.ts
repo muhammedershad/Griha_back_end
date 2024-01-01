@@ -35,9 +35,10 @@ class AdminController {
             }
 
             const loginResult: any = await this.adminAuthUsecase.login( username, password );
+            console.log(loginResult.token)
 
             if( loginResult.success ) {
-                res.cookie("token", loginResult?.token || "", {
+                res.cookie("admin_token", loginResult?.token || "", {
                     httpOnly: true,
                     secure: true,
                     sameSite: "strict",
@@ -61,6 +62,23 @@ class AdminController {
                 success: false,
                 message: "Internal Server Error",
             });
+        }
+    }
+
+    async logout ( req: Request, res: Response ) {
+        try {
+            res.clearCookie('admin_token');
+
+            res.status(200).json({
+                success: true,
+                message: 'Logout successful'
+            })
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in logout'
+            })
         }
     }
 }

@@ -5,8 +5,7 @@ const jwt = new JWTService();
 
 const adminAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token = req.cookies.token;
-        console.log(token);
+        const token = req.cookies.admin_token;
 
         if (!token) {
             return res.status(401).json({
@@ -17,7 +16,7 @@ const adminAuthMiddleware = async (req: Request, res: Response, next: NextFuncti
        
         // Verify the token
         const auth = await jwt.verifyToken(token);
-        console.log(auth)
+        // console.log(auth)
         if (!auth.success || auth.role !== 'admin') {
             return res.status(401).json({
                 success: false,

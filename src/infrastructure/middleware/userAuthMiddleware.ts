@@ -5,7 +5,7 @@ const jwt = new JWTService();
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token = req.cookies.token;
+        const token = req.cookies.user_token;
         // console.log(token);
 
         if (!token) {
