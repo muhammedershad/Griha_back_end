@@ -105,5 +105,33 @@ class EmployeeRepository {
         }
     }
 
+    async usernameExistsCheck ( username: string ) {
+        try {
+            const employee = await EmployeeModel.findOne({ username: username })
+            return employee
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    async updateEmployeeInfo ( employeeData: IEmployees ) {
+        try {
+            const employeeUpdate = await EmployeeModel.findOneAndUpdate({ email: employeeData.email }, {
+                email: employeeData.email,
+                username: employeeData.username,
+                firstName: employeeData.firstName,
+                lastName: employeeData.lastName,
+                phone: employeeData.phone,
+                password: employeeData.password
+            })
+
+            return employeeData
+
+        } catch (error) {
+            console.log(error);   
+        }
+    }
+
 }
 export default EmployeeRepository

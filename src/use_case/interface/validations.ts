@@ -26,10 +26,33 @@ const isOtpValid = (otp : string) : boolean => {
     return otp.length !== 4;
 }
 
+const isValidFirstName = ( firstName: string ): boolean => {
+    return firstName.length > 0
+}
+
+const isValidLastName = ( secondName: string ): boolean => {
+    return secondName.length > 0
+}
+
+const isValidUsername = ( username: string ): boolean => {
+    return username.length > 0
+} 
+
 export {
     isValidEmail,
     isValidPhoneNumber,
     isValidPassword,
     isValidName,
     isOtpValid
+}
+
+export const validations =  {
+    isValidEmail,
+    isValidPhoneNumber,
+    isValidPassword,
+    isValidName,
+    isOtpValid,
+    isValidFirstName,
+    isValidLastName,
+    isValidUsername
 }

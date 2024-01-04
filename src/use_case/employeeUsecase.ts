@@ -138,6 +138,44 @@ class EmployeeUsecase {
             
         }
     }
+
+    async usernameExistCheck( username: string ) {
+        try {
+            const usernameExist = await this.employeeRepository.usernameExistsCheck( username )
+            if ( usernameExist ) {
+                return {
+                    success: false,
+                    message: 'Username already exists'
+                }
+            } else {
+                return {
+                    success: true,
+                    message: 'Username not exists'
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateEmployeeInfo ( employee: IEmployees ) {
+        try {
+            const employeeInfoUpdated = await this.employeeRepository.updateEmployeeInfo( employee )
+            if ( employeeInfoUpdated ) {
+                return {
+                    success: true,
+                    message: 'Data updated successfully'
+                }
+            } else {
+                return {
+                    success: false,
+                    message: 'Error in updating Error'
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 export default EmployeeUsecase

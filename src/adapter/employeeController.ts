@@ -1,8 +1,7 @@
 import EmployeeUsecase from "../use_case/employeeUsecase";
 import { Request, Response } from "express-serve-static-core";
-import { isValidEmail } from "../use_case/interface/validations";
+import { isValidEmail, validations } from "../use_case/interface/validations";
 import { ObjectId, Schema } from "mongoose";
-
 
 class EmployeeController {
     private employeeUsecase: EmployeeUsecase
@@ -194,6 +193,64 @@ class EmployeeController {
             res.status(500).json({
                 success: false,
                 message: 'Error in logout'
+            })
+        }
+    }
+
+    async profileUpdate ( req: Request, res: Response ) {
+        try {
+            let { firstName, lastName, username, phone, password, email} = req.body
+
+            firstName = firstName.trim()
+            lastName = lastName.trim()
+            username = username.trim()
+            phone = phone.trim()
+            password = password.trim()
+            email = email.trim()
+
+            if ( !firstName || !validations.isValidFirstName( firstName )) {
+                return res.status(200).json({success: false, message: 'Enter a valid first name'})
+            }
+            if ( !lastName || !validations.isValidLastName( lastName )) {
+                return res.status(200).json({success: false, message: 'Enter valid last name'})
+            }
+            if ( !username || !validations.isValidUsername( username )) {
+                return res.status(200).json({success: false, message: 'Enter valid username'})
+            } else {
+                const usernameExist = await this.employeeUsecase.usernameExistCheck( username )
+                if ( usernameExist?.success) {
+                    return res.status(200).json({ 
+                        success: false,
+                        message: usernameExist?.success
+                    })
+                }
+            }
+            if(!email || !validations.isValidEmail( email )) {
+                return res.status(200).json({
+                    success: false,
+                    message: 'Invalid email'
+                })
+            }
+            if ( !password || !validations.isValidPassword( password )) {
+                return res.status(200).json({
+                    success: false,
+                    message: 'Invalid Password'
+                })
+            }
+            if ( !phone || !validations.isValidPhoneNumber( phone )) {
+                return res.status(200).json({
+                    success: false,
+                    message: 'Invalid phone number'
+                })
+            }
+
+            const employeeInfoUpdate = await this.employeeUsecase.updateEmployeeInfo( employee )
+        
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in updating in employee info'
             })
         }
     }
