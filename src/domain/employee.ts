@@ -15,4 +15,14 @@ export interface IEmployees extends Document {
     teamLead?: boolean;
     isBlocked?: boolean;
     isSenior?: boolean;
+    image?: string
+}
+
+export interface Employee {
+    firstName: string,
+    lastName: string,
+    username: string,
+    phone: string,
+    password:string,
+    email: string
 }

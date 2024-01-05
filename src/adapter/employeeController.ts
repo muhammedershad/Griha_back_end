@@ -2,6 +2,7 @@ import EmployeeUsecase from "../use_case/employeeUsecase";
 import { Request, Response } from "express-serve-static-core";
 import { isValidEmail, validations } from "../use_case/interface/validations";
 import { ObjectId, Schema } from "mongoose";
+import { Employee } from "../domain/employee";
 
 class EmployeeController {
     private employeeUsecase: EmployeeUsecase
@@ -67,7 +68,7 @@ class EmployeeController {
             );
             // console.log(login, "login status");
             if (login?.success) {
-                res.cookie("token", login?.token || "", {
+                res.cookie("employee_token", login?.token || "", {
                     httpOnly: true,
                     secure: true,
                     sameSite: "strict",
@@ -90,6 +91,15 @@ class EmployeeController {
                 success: false,
                 message: (error as Error)?.message,
             })
+        }
+    }
+
+    async EmployeeDetails (req: Request, res: Response) {
+        try {
+            res.status(200).json({success: true})
+        } catch (error) {
+            console.log(error);
+            
         }
     }
 
@@ -243,6 +253,14 @@ class EmployeeController {
                     message: 'Invalid phone number'
                 })
             }
+            const employee: Employee = {
+                firstName,
+                lastName,
+                username,
+                phone,
+                password,
+                email
+            }
 
             const employeeInfoUpdate = await this.employeeUsecase.updateEmployeeInfo( employee )
         
@@ -251,6 +269,29 @@ class EmployeeController {
             res.status(500).json({
                 success: false,
                 message: 'Error in updating in employee info'
+            })
+        }
+    }
+
+    async profilephotoUpdate (req: Request, res: Response) {
+        try {
+            let {imageUrl, employeeId} = req.body
+            imageUrl = imageUrl.trim()
+            employeeId = employeeId.trim()
+            if ( !imageUrl || !employeeId ) {
+                return res.status(400).json({success: false, message: "Invalid imageUrl or employeeId"})
+            }
+            const saveEmployeePhoto = await this.employeeUsecase.saveEmployeePhoto(employeeId, imageUrl )
+            if ( saveEmployeePhoto?.success ) {
+                return res.status(200).json(saveEmployeePhoto)
+            } else {
+                return res.status(400).json(saveEmployeePhoto)
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in updating in employee profile photo'
             })
         }
     }

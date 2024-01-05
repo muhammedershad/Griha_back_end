@@ -15,6 +15,7 @@ export interface IEmployees extends Document {
     teamLead: boolean;
     isBlocked: boolean;
     isSenior: boolean;
+    image: string;
 }
 
 const EmployeesSchema: Schema = new Schema({
@@ -31,6 +32,7 @@ const EmployeesSchema: Schema = new Schema({
     teamLead: { type: Boolean, required: true, default: false },
     isBlocked: { type: Boolean, required: true, default: false },
     isSenior: { type: Boolean, required: true, default: false },
+    image: { type: String },
 });
 
 const Employees = mongoose.model<IEmployees>("Employees", EmployeesSchema);

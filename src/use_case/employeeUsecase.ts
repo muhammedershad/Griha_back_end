@@ -1,5 +1,5 @@
 import { ObjectId, Schema } from "mongoose"
-import { IEmployees } from "../domain/employee"
+import { Employee, IEmployees } from "../domain/employee"
 import EmployeeRepository from "../infrastructure/repository/employeeRepository"
 import { employeeInvitationMail } from "./interface/emailService"
 import BcryptPasswordHashingService from "./interface/encryptService"
@@ -158,7 +158,7 @@ class EmployeeUsecase {
         }
     }
 
-    async updateEmployeeInfo ( employee: IEmployees ) {
+    async updateEmployeeInfo ( employee: Employee ) {
         try {
             const employeeInfoUpdated = await this.employeeRepository.updateEmployeeInfo( employee )
             if ( employeeInfoUpdated ) {
@@ -174,6 +174,25 @@ class EmployeeUsecase {
             }
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async saveEmployeePhoto (employeeId: string, imageUrl: string ) {
+        try {
+            const photoSaved = await this.employeeRepository.saveEmployeePhoto( employeeId, imageUrl)
+            if ( photoSaved ) {
+                return {
+                    success: true,
+                    message: 'Image updated successfully'
+                }
+            } else {
+                return {
+                    success: false,
+                    message: 'Failure in updating image'
+                }
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 }

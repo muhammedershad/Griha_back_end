@@ -1,10 +1,11 @@
-import EmployeeModel, { IEmployees } from '../database/employeeModel'
-import { ObjectId, Schema } from 'mongoose'
+import EmployeeModel from "../database/employeeModel";
+import { ObjectId, Schema } from "mongoose";
 import { ParsedQs } from "qs";
+import { Employee } from "../../domain/employee";
+import { IEmployees } from "../../domain/employee";
 
 class EmployeeRepository {
-
-    async register( employee: IEmployees ) {
+    async register(employee: IEmployees) {
         try {
             const newEmployee = new EmployeeModel({
                 firstName: employee.firstName,
@@ -12,11 +13,11 @@ class EmployeeRepository {
                 jobRole: employee.jobRole,
                 password: employee.password,
                 department: employee.department,
-            })
-            const success = await newEmployee.save()
+            });
+            const success = await newEmployee.save();
             // console.log(success,'repository');
-            
-            return success
+
+            return success;
         } catch (error) {
             // return {
             //     status: 500,
@@ -24,7 +25,6 @@ class EmployeeRepository {
             //     message: (error as Error).message
             // }
             console.log(error);
-            
         }
     }
 
@@ -39,99 +39,136 @@ class EmployeeRepository {
 
     async allEmployees() {
         try {
-            const employees = await EmployeeModel.find()
-            return employees
+            const employees = await EmployeeModel.find();
+            return employees;
         } catch (error) {
             console.log(error);
-            
         }
     }
 
-    async changeIsBlock ( userId: string | Schema.Types.ObjectId | string[] | ParsedQs | ParsedQs[]  ) {
+    async changeIsBlock(
+        userId:
+            | string
+            | Schema.Types.ObjectId
+            | string[]
+            | ParsedQs
+            | ParsedQs[]
+    ) {
         try {
-            const employee = await EmployeeModel.findById( userId )
-            if ( employee ) {
+            const employee = await EmployeeModel.findById(userId);
+            if (employee) {
                 employee.isBlocked = !employee.isBlocked;
-                const success = await employee.save()
-                if ( success ) {
+                const success = await employee.save();
+                if (success) {
                     return {
                         success: true,
-                        message: ` ${employee.isBlocked ? 'Unblocked' : 'Blocked'} user`,
-                        employee: employee
-                    }
+                        message: ` ${
+                            employee.isBlocked ? "Unblocked" : "Blocked"
+                        } user`,
+                        employee: employee,
+                    };
                 } else {
                     return {
                         success: false,
-                        message: `Error in ${employee.isBlocked ? 'unblocking' : 'blocking'} employee`
-                    }
+                        message: `Error in ${
+                            employee.isBlocked ? "unblocking" : "blocking"
+                        } employee`,
+                    };
                 }
             } else {
                 return {
                     success: false,
-                    message: 'Employee not found'
-                }
+                    message: "Employee not found",
+                };
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
-    async chageEmployeeRole( employeeId: string | Schema.Types.ObjectId | string[] | ParsedQs | ParsedQs[] ) {
+    async chageEmployeeRole(
+        employeeId:
+            | string
+            | Schema.Types.ObjectId
+            | string[]
+            | ParsedQs
+            | ParsedQs[]
+    ) {
         try {
-            const employee = await EmployeeModel.findById( employeeId )
-            if ( employee ) {
+            const employee = await EmployeeModel.findById(employeeId);
+            if (employee) {
                 employee.isSenior = !employee.isSenior;
-                const success = await employee.save()
-                if ( success ) {
+                const success = await employee.save();
+                if (success) {
                     return {
                         success: true,
                         message: `Employee role changed`,
-                        employee: employee
-                    }
+                        employee: employee,
+                    };
                 } else {
                     return {
                         success: false,
-                        message: `Error in employee role change`
-                    }
+                        message: `Error in employee role change`,
+                    };
                 }
             } else {
                 return {
                     success: false,
-                    message: 'Employee not found'
-                }
+                    message: "Employee not found",
+                };
             }
         } catch (error) {
-            console.log(error); 
+            console.log(error);
         }
     }
 
-    async usernameExistsCheck ( username: string ) {
+    async usernameExistsCheck(username: string) {
         try {
-            const employee = await EmployeeModel.findOne({ username: username })
-            return employee
+            const employee = await EmployeeModel.findOne({
+                username: username,
+            });
+            return employee;
         } catch (error) {
             console.log(error);
-            
         }
     }
 
-    async updateEmployeeInfo ( employeeData: IEmployees ) {
+    async updateEmployeeInfo(employeeData: Employee) {
         try {
-            const employeeUpdate = await EmployeeModel.findOneAndUpdate({ email: employeeData.email }, {
-                email: employeeData.email,
-                username: employeeData.username,
-                firstName: employeeData.firstName,
-                lastName: employeeData.lastName,
-                phone: employeeData.phone,
-                password: employeeData.password
-            })
+            const employeeUpdate = await EmployeeModel.findOneAndUpdate(
+                { email: employeeData.email },
+                {
+                    set: {
+                        email: employeeData.email,
+                        username: employeeData.username,
+                        firstName: employeeData.firstName,
+                        lastName: employeeData.lastName,
+                        phone: employeeData.phone,
+                        password: employeeData.password,
+                    },
+                }
+            );
 
-            return employeeData
-
+            return employeeData;
         } catch (error) {
-            console.log(error);   
+            console.log(error);
         }
     }
 
+    async saveEmployeePhoto(employeeId: string, imageUrl: string ) {
+        try {
+            const photoSaved = await EmployeeModel.findOneAndUpdate(
+                { _id: employeeId },
+                { $set: { image: imageUrl } },
+                { new: true }
+            );
+            console.log(photoSaved);
+            return photoSaved;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    
 }
-export default EmployeeRepository
+export default EmployeeRepository;
