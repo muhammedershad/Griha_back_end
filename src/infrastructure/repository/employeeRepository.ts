@@ -169,6 +169,16 @@ class EmployeeRepository {
             throw error;
         }
     }
+
+    async employeeDetails( employeeId: string | ObjectId ) {
+        try {
+            const employee = await EmployeeModel.findById( employeeId )
+            return employee
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
     
 }
 export default EmployeeRepository;

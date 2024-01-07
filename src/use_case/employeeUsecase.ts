@@ -74,7 +74,7 @@ class EmployeeUsecase {
                 user.password = ''
 
                 if ( verifyPassword ) {
-                    const token = await JWT.createToken(user.email, "employee");
+                    const token = await JWT.createToken(user?._id, "employee");
                     
                     if (token) {
                         return {
@@ -193,6 +193,38 @@ class EmployeeUsecase {
             }
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    async employeeDetails ( token: string ) {
+        try {
+            // Verify the token
+            const auth = await JWT.verifyToken(token);
+            // console.log(auth,'jwt details')
+            if (!auth.success || auth.role !== 'employee') {
+                return {
+                    success: false,
+                    message: "Unauthorized Request",
+                }
+            }
+            const employeeId = auth.data.userData
+            // console.log(auth.data.userData,'auth.data');
+            const employee = await this.employeeRepository.employeeDetails( employeeId )
+            
+            if ( employee ) {
+                return {
+                    success: true,
+                    message: 'Found employee',
+                    employee: employee
+                }
+            } else {
+                return {
+                    success: false,
+                    message: 'Employee not found'
+                }
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 }

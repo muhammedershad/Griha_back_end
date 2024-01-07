@@ -94,12 +94,21 @@ class EmployeeController {
         }
     }
 
-    async EmployeeDetails (req: Request, res: Response) {
+    async employeeDetails (req: Request, res: Response) {
         try {
-            res.status(200).json({success: true})
+            const { token } = req.body
+            if ( !token ) {
+                return res.status(400).json({success: false, message: 'Invalid token'})
+            }
+            const response = await this.employeeUsecase.employeeDetails( token )
+            if ( response?.success ) {
+                return res.status(200).json(response)
+            } else {
+                return res.status(400).json(response)
+            }
         } catch (error) {
             console.log(error);
-            
+            return res.status(500).json({ success: false, message: (error as Error)?.message })
         }
     }
 

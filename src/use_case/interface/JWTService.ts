@@ -1,4 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { ObjectId } from "mongoose";
 require("dotenv").config();
 
 export interface TokenService {
@@ -11,7 +12,7 @@ interface DecodedToken extends JwtPayload {
 const secretKey: string = process.env.JWT_SECRET_KEY || "";
 
 export default class JWTService implements TokenService {
-    async createToken(data: string, role: string): Promise<string> {
+    async createToken(data: string | ObjectId, role: string): Promise<string> {
         try {
             const token = jwt.sign({ userData: data, role: role }, secretKey, {
                 expiresIn: "24h",

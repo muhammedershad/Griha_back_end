@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, ObjectId } from "mongoose";
 
 export interface IEmployees extends Document {
-    _id?: ObjectId;
+    _id?: ObjectId | string;
     lastName: string;
     firstName: string;
     password: string;

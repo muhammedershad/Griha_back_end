@@ -5,7 +5,7 @@ const jwt = new JWTService();
 
 const employeeAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log(req.cookies.employee_token,'cookies');
+        // console.log(req.cookies.employee_token,'cookies');
         
         const token = req.cookies.employee_token;
 
@@ -28,7 +28,7 @@ const employeeAuthMiddleware = async (req: Request, res: Response, next: NextFun
 
         // console.log(auth,'auth')
         // Attach user information to the request
-        req.user = auth;
+        // req.user = auth.data.userData;
     
 
         next(); // Continue to the next middleware or route handler
