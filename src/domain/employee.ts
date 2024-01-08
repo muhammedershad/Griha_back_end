@@ -23,6 +23,7 @@ export interface Employee {
     lastName: string,
     username: string,
     phone: string,
-    password:string,
-    email: string
+    password?:string,
+    email: string,
+    employeeId: string | ObjectId
 }

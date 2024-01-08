@@ -160,11 +160,29 @@ class EmployeeUsecase {
 
     async updateEmployeeInfo ( employee: Employee ) {
         try {
+            const employeeDetials = await this.employeeRepository.employeeDetails( employee.employeeId )
+            if ( !employeeDetials ) {
+                return {
+                    success: false,
+                    message: 'Employee not found'
+                }
+            }
+            if ( employeeDetials.email !== employee.email ) {
+                const emailExist = await this.employeeRepository.emailExistsCheck( employee.email )
+                if ( emailExist ) return { success: false, message: 'Email id already exists'}
+            }
+            if ( employee.username !== employeeDetials.email ) {
+                const usernameExists = await this.employeeRepository.usernameExistsCheck( employee.username )
+                if ( usernameExists ) return { success: false, message: 'Username already exists'}
+            }
             const employeeInfoUpdated = await this.employeeRepository.updateEmployeeInfo( employee )
+            // console.log(employeeInfoUpdated,'usecase');
+            
             if ( employeeInfoUpdated ) {
                 return {
                     success: true,
-                    message: 'Data updated successfully'
+                    message: 'Data updated successfully',
+                    employeeInfoUpdated
                 }
             } else {
                 return {

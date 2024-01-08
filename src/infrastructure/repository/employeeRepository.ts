@@ -136,20 +136,20 @@ class EmployeeRepository {
     async updateEmployeeInfo(employeeData: Employee) {
         try {
             const employeeUpdate = await EmployeeModel.findOneAndUpdate(
-                { email: employeeData.email },
+                { _id: employeeData.employeeId },
                 {
-                    set: {
+                    $set: {
                         email: employeeData.email,
                         username: employeeData.username,
                         firstName: employeeData.firstName,
                         lastName: employeeData.lastName,
                         phone: employeeData.phone,
-                        password: employeeData.password,
                     },
-                }
+                },
+                {new: true}
             );
 
-            return employeeData;
+            return employeeUpdate;
         } catch (error) {
             console.log(error);
         }
@@ -177,6 +177,15 @@ class EmployeeRepository {
         } catch (error) {
             console.log(error);
             
+        }
+    }
+
+    async emailExistsCheck( email: string ) {
+        try {
+            const employee = await EmployeeModel.findOne({ email: email})
+            return employee
+        } catch (error) {
+            console.log(error);  
         }
     }
     

@@ -18,7 +18,7 @@ router.get('/allEmployees', adminAuthMiddleware, (req, res) => controller.allEmp
 router.patch('/block-employee', adminAuthMiddleware, (req, res) => controller.blockEmployee(req, res))
 router.patch('/change-employee-role', adminAuthMiddleware, (req, res) => controller.changeEmployeeRole(req, res))
 router.post('/logout', ( req, res ) => controller.logout(req, res))
-router.patch('/profile', ( req, res ) => controller.profileUpdate(req, res))
+router.patch('/profile', employeeAuthMiddleware, ( req, res ) => controller.profileUpdate(req, res))
 router.patch('/update-profile-photo',employeeAuthMiddleware, (req, res) => controller.profilephotoUpdate(req, res))
 router.post('/employee', employeeAuthMiddleware, (req, res) => controller.employeeDetails(req, res) )
 

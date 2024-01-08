@@ -218,14 +218,15 @@ class EmployeeController {
 
     async profileUpdate ( req: Request, res: Response ) {
         try {
-            let { firstName, lastName, username, phone, password, email} = req.body
+            let { firstName, lastName, username, phone, email, _id } = req.body
+            // console.log(req.body)
 
             firstName = firstName.trim()
             lastName = lastName.trim()
             username = username.trim()
             phone = phone.trim()
-            password = password.trim()
             email = email.trim()
+            let employeeId = _id.trim()
 
             if ( !firstName || !validations.isValidFirstName( firstName )) {
                 return res.status(200).json({success: false, message: 'Enter a valid first name'})
@@ -236,13 +237,13 @@ class EmployeeController {
             if ( !username || !validations.isValidUsername( username )) {
                 return res.status(200).json({success: false, message: 'Enter valid username'})
             } else {
-                const usernameExist = await this.employeeUsecase.usernameExistCheck( username )
-                if ( usernameExist?.success) {
-                    return res.status(200).json({ 
-                        success: false,
-                        message: usernameExist?.success
-                    })
-                }
+                // const usernameExist = await this.employeeUsecase.usernameExistCheck( username )
+                // if ( usernameExist?.success) {
+                //     return res.status(200).json({ 
+                //         success: false,
+                //         message: usernameExist?.success
+                //     })
+                // }
             }
             if(!email || !validations.isValidEmail( email )) {
                 return res.status(200).json({
@@ -250,16 +251,22 @@ class EmployeeController {
                     message: 'Invalid email'
                 })
             }
-            if ( !password || !validations.isValidPassword( password )) {
-                return res.status(200).json({
-                    success: false,
-                    message: 'Invalid Password'
-                })
-            }
+            // if ( !password || !validations.isValidPassword( password )) {
+            //     return res.status(200).json({
+            //         success: false,
+            //         message: 'Invalid Password'
+            //     })
+            // }
             if ( !phone || !validations.isValidPhoneNumber( phone )) {
                 return res.status(200).json({
                     success: false,
                     message: 'Invalid phone number'
+                })
+            }
+            if ( !employeeId ) {
+                return res.status(200).json({
+                    success: false,
+                    message: 'Invalid employee Id'
                 })
             }
             const employee: Employee = {
@@ -267,11 +274,19 @@ class EmployeeController {
                 lastName,
                 username,
                 phone,
-                password,
-                email
+                // password,
+                email,
+                employeeId
             }
 
-            const employeeInfoUpdate = await this.employeeUsecase.updateEmployeeInfo( employee )
+            const employeeInfoUpdated = await this.employeeUsecase.updateEmployeeInfo( employee )
+            // console.log(employeeInfoUpdated,'respository');
+            
+            if ( employeeInfoUpdated?.success ) {
+                return res.status(200).json(employeeInfoUpdated)
+            } else {
+                return res.status(200).json(employeeInfoUpdated)
+            }
         
         } catch (error) {
             console.log(error);
