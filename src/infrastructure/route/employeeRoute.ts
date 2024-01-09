@@ -4,9 +4,11 @@ import EmployeeController from "../../adapter/employeeController";
 import express from "express";
 import adminAuthMiddleware from "../middleware/adminAuthMiddelware";
 import employeeAuthMiddleware from "../middleware/employeeAuthMiddleware";
+import BankRepository from "../repository/bankRepository";
 
 const repository = new EmployeeRepository()
-const useCase = new EmployeeUsecase(repository)
+const bankRepository = new BankRepository()
+const useCase = new EmployeeUsecase(repository, bankRepository)
 const controller = new EmployeeController(useCase)
 
 const router = express.Router()
@@ -21,5 +23,8 @@ router.post('/logout', ( req, res ) => controller.logout(req, res))
 router.patch('/profile', employeeAuthMiddleware, ( req, res ) => controller.profileUpdate(req, res))
 router.patch('/update-profile-photo',employeeAuthMiddleware, (req, res) => controller.profilephotoUpdate(req, res))
 router.post('/employee', employeeAuthMiddleware, (req, res) => controller.employeeDetails(req, res) )
+router.patch('/change-password', employeeAuthMiddleware, (req, res) => controller.changePassword(req, res))
+router.post('/update-bank-details', employeeAuthMiddleware, (req, res) => controller.updateBankDetails(req, res))
+router.get('/bank-details/:userId', employeeAuthMiddleware, (req, res) => controller.getEmployeeBankDetails(req, res))
 
 export default router

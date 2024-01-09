@@ -3,6 +3,7 @@ import { ObjectId, Schema } from "mongoose";
 import { ParsedQs } from "qs";
 import { Employee } from "../../domain/employee";
 import { IEmployees } from "../../domain/employee";
+import { ChangePassword } from "../../domain/changePass";
 
 class EmployeeRepository {
     async register(employee: IEmployees) {
@@ -162,7 +163,7 @@ class EmployeeRepository {
                 { $set: { image: imageUrl } },
                 { new: true }
             );
-            console.log(photoSaved);
+            // console.log(photoSaved);
             return photoSaved;
         } catch (error) {
             console.error(error);
@@ -186,6 +187,15 @@ class EmployeeRepository {
             return employee
         } catch (error) {
             console.log(error);  
+        }
+    }
+
+    async changePasssword( data: ChangePassword ) {
+        try {
+            const passChanged = await EmployeeModel.findByIdAndUpdate(data.id, {$set:{password: data.confirmPassword}})
+            return passChanged
+        } catch (error) {
+            console.log(error); 
         }
     }
     

@@ -300,17 +300,90 @@ class EmployeeController {
     async profilephotoUpdate (req: Request, res: Response) {
         try {
             let {imageUrl, employeeId} = req.body
+
             imageUrl = imageUrl.trim()
             employeeId = employeeId.trim()
+
             if ( !imageUrl || !employeeId ) {
                 return res.status(400).json({success: false, message: "Invalid imageUrl or employeeId"})
             }
+
             const saveEmployeePhoto = await this.employeeUsecase.saveEmployeePhoto(employeeId, imageUrl )
             if ( saveEmployeePhoto?.success ) {
                 return res.status(200).json(saveEmployeePhoto)
             } else {
                 return res.status(400).json(saveEmployeePhoto)
             }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in updating in employee profile photo'
+            })
+        }
+    }
+
+    async changePassword(req: Request, res: Response) {
+        try {
+            let {currentPassword, newPassword, confirmPassword, id } = req.body
+
+            if ( !currentPassword || currentPassword.length < 6 ) {
+                return res.status(200).json({success: false, message: 'Invalid current password'})
+            }
+            if (!newPassword || newPassword.length < 6) {
+                return res.status(200).json({success: false, message: 'Invalid newPassword'})
+            }
+            if (newPassword !== confirmPassword ) {
+                return res.status(200).json({success: false, message: 'Password must watch'})
+            }
+            if (!id.trim()) {
+                return res.status(200).json({success: false, message: 'Invalid employee id'})
+            }
+
+            const response = await this.employeeUsecase.changePassword(req.body)
+            return res.status(200).json(response)
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in updating in employee profile photo'
+            })
+        }
+    }
+
+    async updateBankDetails(req: Request, res: Response) {
+        try {
+            let { bankName, accountNumber, IFSCCode, PANNumber, UPIId, userId } = req.body
+            console.log(req.body);
+            
+
+            if (!bankName.trim()) return res.status(200).json({success: false, message:'Invalid account name'})
+            if (!accountNumber) return res.status(200).json({success: false, message:'Invalid accound number'})
+            if (!IFSCCode.trim()) return res.status(200).json({success: false, message: 'Invalid IFSC code'})
+            if (!PANNumber.trim()) return res.status(200).json({success: false, message: 'Invalid PAN number'})
+            if (!UPIId.trim()) return res.status(200).json({success: false, message: 'Invalid UPI id'})
+            if (!userId.trim()) return res.status(200).json({success: false, message: 'Invalid employee id'})
+
+            const response = await this.employeeUsecase.updateBankDetails( req.body )
+            if ( response)
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in updating in employee profile photo'
+            })
+        }
+    }
+
+    async getEmployeeBankDetails (req: Request, res: Response ) {
+        try {
+            const userId = req.params.userId;
+            if (!userId) return res.status(400).json({success: false, message: 'Invalid employeeId'})
+
+            const response = await this.employeeUsecase.employeeBankDetails(userId)
+            return res.status(200).json(response)
         } catch (error) {
             console.log(error);
             res.status(500).json({

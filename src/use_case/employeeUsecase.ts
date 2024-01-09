@@ -5,14 +5,19 @@ import { employeeInvitationMail } from "./interface/emailService"
 import BcryptPasswordHashingService from "./interface/encryptService"
 import JWTService from "./interface/JWTService"
 import { ParsedQs } from "qs";
+import { ChangePassword } from "../domain/changePass"
+import BankRepository from "../infrastructure/repository/bankRepository"
+import { BankDetails } from "../domain/bankDetials"
 
 const encryptService = new BcryptPasswordHashingService();
 const JWT = new JWTService()
 
 class EmployeeUsecase {
+    private bankRepository: BankRepository
     private employeeRepository: EmployeeRepository
-    constructor( employeeRepository: EmployeeRepository ) {
+    constructor( employeeRepository: EmployeeRepository, bankRepository: BankRepository ) {
         this.employeeRepository = employeeRepository
+        this.bankRepository = bankRepository
     }
 
     async register ( employee: IEmployees) {
@@ -171,7 +176,7 @@ class EmployeeUsecase {
                 const emailExist = await this.employeeRepository.emailExistsCheck( employee.email )
                 if ( emailExist ) return { success: false, message: 'Email id already exists'}
             }
-            if ( employee.username !== employeeDetials.email ) {
+            if ( employee.username !== employeeDetials.username ) {
                 const usernameExists = await this.employeeRepository.usernameExistsCheck( employee.username )
                 if ( usernameExists ) return { success: false, message: 'Username already exists'}
             }
@@ -241,6 +246,55 @@ class EmployeeUsecase {
                     message: 'Employee not found'
                 }
             }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async changePassword(data: ChangePassword) {
+        try {
+            const employee = await this.employeeRepository.employeeDetails( data.id )
+            if ( !employee ) {
+                return { success: false, message: 'Employee not found'}
+            }
+
+            const passMatch = await encryptService.verifyHashData( data.currentPassword, employee.password )
+            if ( !passMatch ) {
+                return {success: false, message: 'Incorrect current password'}
+            }
+
+            const hashedPass = await encryptService.hashData( data.confirmPassword )
+            if ( hashedPass ) data.confirmPassword = hashedPass
+
+            const response = await this.employeeRepository.changePasssword(data)
+            console.log(response);
+            
+            if ( response ) return { success: true, message: 'Password updated'}
+            else return { success: false, message: 'Failed in updating password'}
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateBankDetails(data: BankDetails) {
+        try {
+            const response = await this.bankRepository.updateEmployeeBankDetails(data)
+            if (response) {
+                return { success: true, message: "Bank details updated successfully", bankDetails:response}
+            } else {
+                return { success: false, message: 'Bank details updating failed'}
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async employeeBankDetails(userId: string | ObjectId ) {
+        try {
+            const response =  await this.bankRepository.getUserBankDetails(userId)
+            if (response) return {success: true, message: 'Employee Bank details fetching success', bankDetails: response}
+            else return {success: false, message: 'Employee bank details fetching failed'}
         } catch (error) {
             console.log(error);
         }
