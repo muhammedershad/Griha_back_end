@@ -401,6 +401,19 @@ class userController {
             })
         }
     }
+
+    async allClients (req: Request, res: Response) {
+        try {
+            const response = await this.userUsecase.allClients()
+            return res.status(200).json(response)
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in logout'
+            })
+        }
+    }
 }
 
 export default userController;

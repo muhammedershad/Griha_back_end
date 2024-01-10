@@ -16,7 +16,7 @@ const router = express.Router()
 
 router.post('/login', (req, res) => controller.login(req, res));
 router.post('/register', adminAuthMiddleware, (req, res) => controller.register(req, res));
-router.get('/allEmployees', adminAuthMiddleware, (req, res) => controller.allEmployees(req, res));
+router.get('/allEmployees', (req, res) => controller.allEmployees(req, res));
 router.patch('/block-employee', adminAuthMiddleware, (req, res) => controller.blockEmployee(req, res))
 router.patch('/change-employee-role', adminAuthMiddleware, (req, res) => controller.changeEmployeeRole(req, res))
 router.post('/logout', ( req, res ) => controller.logout(req, res))

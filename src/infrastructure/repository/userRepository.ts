@@ -163,5 +163,14 @@ class UserRepository {
             console.log(error); 
         }
     }
+
+    async allClients() {
+        try {
+            const response = await UserModel.find({Client: true})
+            return response
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 export default UserRepository;

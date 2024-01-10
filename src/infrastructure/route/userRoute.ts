@@ -6,6 +6,7 @@ import OtpUsecase from '../../use_case/otpUsecase';
 import express from "express";
 import authMiddleware from "../middleware/userAuthMiddleware";
 import adminAuthMiddleware from "../middleware/adminAuthMiddelware";
+import employeeAuthMiddleware from "../middleware/employeeAuthMiddleware";
 
 const otpRepository = new OtpRepository()
 const otpUsecase = new OtpUsecase(otpRepository)
@@ -30,6 +31,7 @@ router.get('/users', adminAuthMiddleware, ( req, res ) => controller.users( req,
 router.patch('/block-user', adminAuthMiddleware, ( req, res ) => controller.blockUser( req, res ))
 router.patch( '/change-user-role', adminAuthMiddleware, ( req, res ) => controller.changeUserRole( req, res ))
 router.post( '/logout', ( req, res ) => controller.logout( req, res ))
+router.get('/all-clients', employeeAuthMiddleware, (req, res) => controller.allClients(req, res))
 
 
 export { controller }

@@ -196,6 +196,16 @@ class Userusecase {
             
         }
     }
+
+    async allClients () {
+        try {
+            const response = await this.userRepository.allClients()
+            if (response) return {success: true, message: 'All clients data fetched successfully', allClients:response }
+            else return {success: false, message: 'All Clients data fetching failed'}
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 export default Userusecase;
