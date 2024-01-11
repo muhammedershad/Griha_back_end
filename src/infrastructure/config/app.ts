@@ -1,27 +1,29 @@
 import userRouter from "../route/userRoute";
-import adminRouter from '../route/adminRoute'
-import employeeRouter from '../route/employeeRoute'
-import express from "express";
+import adminRouter from "../route/adminRoute";
+import employeeRouter from "../route/employeeRoute";
+import projectRouter from "../route/projectRoute";
+import express, { Request, Response, NextFunction} from "express";
 import path from "path";
 import logger from "morgan";
 import cors from "cors";
-import cookieParser  from "cookie-parser"
+import cookieParser from "cookie-parser";
 
 //passport
 const passport = require("passport");
-import cookieSession from "cookie-session"
-require('../config/passport-config')
+import cookieSession from "cookie-session";
+require("../config/passport-config");
 
 const app = express();
 
 //passport configuration
-app.use(cookieSession({ 
-    name: 'google-auth-session', 
-    keys: ['key1', 'key2'] 
-})); 
-app.use(passport.initialize()); 
+app.use(
+    cookieSession({
+        name: "google-auth-session",
+        keys: ["key1", "key2"],
+    })
+);
+app.use(passport.initialize());
 app.use(passport.session());
-
 
 export const createServer = () => {
     try {
@@ -57,14 +59,19 @@ export const createServer = () => {
 
         // Routes
         app.use("/api/user", userRouter);
-        app.use('/api/admin', adminRouter)
-        app.use('/api/employee', employeeRouter)
+        app.use("/api/admin", adminRouter);
+        app.use("/api/employee", employeeRouter);
+        app.use("/project", projectRouter);
+        
+        app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+            console.log(err);
+            res.status(err.status || 500).json({ success: false, statusCode:err.status , message: err.message || 'Internal server error'})
+        });
 
         //test Route
         app.get("/", (req, res) =>
             res.status(200).json({ message: "API running successfully" })
         );
-
 
         return app;
     } catch (error) {
