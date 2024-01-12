@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 //passport
 const passport = require("passport");
 import cookieSession from "cookie-session";
+import errorHandling from "../middleware/errorHandling";
 require("../config/passport-config");
 
 const app = express();
@@ -61,12 +62,9 @@ export const createServer = () => {
         app.use("/api/user", userRouter);
         app.use("/api/admin", adminRouter);
         app.use("/api/employee", employeeRouter);
-        app.use("/project", projectRouter);
+        app.use("/api/project", projectRouter);
         
-        app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-            console.log(err);
-            res.status(err.status || 500).json({ success: false, statusCode:err.status , message: err.message || 'Internal server error'})
-        });
+        app.use(errorHandling);
 
         //test Route
         app.get("/", (req, res) =>

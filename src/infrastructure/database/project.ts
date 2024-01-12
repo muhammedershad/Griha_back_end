@@ -4,33 +4,33 @@ export interface IProjects extends Document {
     _id: ObjectId;
     projectName: string;
     postedBy: ObjectId;
-    clients: ObjectId[];
+    clients: ObjectId[] | null;
     details: string;
     time: Date;
     location: string;
     team: {
-        members: ObjectId[];
+        members: ObjectId[] | null;
         teamLead: ObjectId;
-    } | null;
+    }
     address: {
         address: string;
         district: string;
         state: string;
         pincode: string;
-    } | null;
+    };
     progress: {
         _id: ObjectId | null;
         attachments: string[] | null;
-        date: Date;
-        details: string;
-        shortDiscription: string;
-        submittedBy: ObjectId;
-        title: string;
+        date: Date | null;
+        details: string | null
+        shortDiscription: string | null
+        submittedBy: ObjectId | null
+        title: string | null
         comments: {
-            comment: string;
-            user: ObjectId
-            time: Date
-        }[];
+            comment: string | null
+            user: ObjectId | null
+            time: Date | null
+        }[] | null;
     };
 }
 
@@ -40,7 +40,7 @@ const ProjectsSchema: Schema = new Schema({
     details: { type: String, required: true },
     clients: [{ type: Schema.Types.ObjectId }],
     postedBy: { type: Schema.Types.ObjectId, required: true },
-    time: { type: Date, required: true },
+    time: { type: Date, required: true, default: new Date() },
     team: {
         members: [{ type: Schema.Types.ObjectId }],
         teamLead: { type: Schema.Types.ObjectId, required: true },
@@ -52,17 +52,17 @@ const ProjectsSchema: Schema = new Schema({
         pincode: { type: String, required: true },
     },
     progress: {
-        title: { type: String, required: true },
-        date: { type: Date, required: true },
-        shortDiscription: { type: String, required: true },
-        details: { type: String, required: true },
-        submittedBy: { type: Schema.Types.ObjectId, required: true },
+        title: { type: String },
+        date: { type: Date, default: new Date() },
+        shortDiscription: { type: String },
+        details: { type: String },
+        submittedBy: { type: Schema.Types.ObjectId },
         attachments: [{ type: String }],
         comments: [
             {
-                comment: { type: String, required: true },
-                user: { type: Schema.Types.ObjectId, required: true },
-                time: { type: Date, required: true }
+                comment: { type: String },
+                user: { type: Schema.Types.ObjectId },
+                time: { type: Date, default: new Date() }
             },
         ],
     },
