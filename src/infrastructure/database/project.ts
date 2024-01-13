@@ -39,7 +39,7 @@ const ProjectsSchema: Schema = new Schema({
     location: { type: String },
     details: { type: String, required: true },
     clients: [{ type: Schema.Types.ObjectId }],
-    postedBy: { type: Schema.Types.ObjectId, required: true },
+    postedBy: { type: Schema.Types.ObjectId, required: true, ref: 'Employees' },
     time: { type: Date, required: true, default: new Date() },
     team: {
         members: [{ type: Schema.Types.ObjectId }],

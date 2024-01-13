@@ -53,6 +53,20 @@ class ProjectController {
             next(error)
         }
     } 
+
+    async projectDetails (req: Request, res: Response, next: NextFunction) {
+        try {
+            const projectId: string = req.params.projectId
+            
+            if (!projectId) throw createError(400, 'Project id is missing')
+            
+            const response = await this.projectUseCase.projectDetails(projectId)
+            if (response) res.status(200).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+    
 }
 
 export default ProjectController;

@@ -12,5 +12,6 @@ const router = express.Router()
 router.get('/', (req, res, next) => controller.test (req, res, next))
 router.post('/', (req, res, next) => controller.createProject(req, res, next))
 router.get('/employee-project/:employeeId', (req, res, next) => controller.employeeProject(req, res, next))
+router.get('/project-details/:projectId', (req, res, next) => controller.projectDetails(req, res, next))
 
 export default router
