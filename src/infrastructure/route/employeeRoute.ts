@@ -26,5 +26,6 @@ router.post('/employee', employeeAuthMiddleware, (req, res) => controller.employ
 router.patch('/change-password', employeeAuthMiddleware, (req, res) => controller.changePassword(req, res))
 router.post('/update-bank-details', employeeAuthMiddleware, (req, res) => controller.updateBankDetails(req, res))
 router.get('/bank-details/:userId', employeeAuthMiddleware, (req, res) => controller.getEmployeeBankDetails(req, res))
+router.get('/all-seniors', employeeAuthMiddleware, (req, res, next) => controller.allSeniorEmployees(req, res, next))
 
 export default router

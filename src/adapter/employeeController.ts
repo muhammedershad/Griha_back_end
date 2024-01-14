@@ -3,6 +3,7 @@ import { Request, Response } from "express-serve-static-core";
 import { isValidEmail, validations } from "../use_case/interface/validations";
 import { ObjectId, Schema } from "mongoose";
 import { Employee } from "../domain/employee";
+import { NextFunction } from "express";
 
 class EmployeeController {
     private employeeUsecase: EmployeeUsecase
@@ -390,6 +391,15 @@ class EmployeeController {
                 success: false,
                 message: 'Error in updating in employee profile photo'
             })
+        }
+    }
+
+    async allSeniorEmployees (req: Request, res: Response, next: NextFunction) {
+        try {
+            const response = await this.employeeUsecase.allSeniorEmployees()
+            if (response) return res.status(200).json(response)
+        } catch (error) {
+            next(error)
         }
     }
 }

@@ -66,6 +66,28 @@ class ProjectController {
             next(error)
         }
     }
+
+    async updateProject (req: Request, res: Response, next: NextFunction) {
+        try {
+            const projectId = req.params.projectId
+            let { projectName, address, location, teamLead } = req.body
+            
+            if(!projectName.trim()) throw createError(400, 'Enter valid project name')
+            if(!address.address.trim()) throw createError(400, 'Enter valid address')
+            if(!address.district.trim()) throw createError(400, 'Enter valid distric')
+            if(!address.state.trim()) throw createError(400, 'Enter valid state')
+            if(!address.pincode.trim()) throw createError(400, 'Enter vaild pincode')
+            if(!location.trim()) throw createError(400, 'Enter valid details')
+            if(!projectId.trim()) throw createError(400, 'Invalid project id')
+            if(!teamLead.trim()) throw createError(400, 'Select the team lead')
+
+            const response = await this.projectUseCase.editProject(projectId, req.body)
+            if (response) return res.status(200).json(response)
+            
+        } catch (error) {
+            next(error)
+        }
+    }
     
 }
 

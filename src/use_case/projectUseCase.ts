@@ -2,6 +2,7 @@ import { NextFunction } from "express";
 import { IProjects } from "../infrastructure/database/project";
 import ProjectRepository from "../infrastructure/repository/projectRepository";
 import createError from 'http-errors'
+import { projectEdit } from "../domain/project";
 
 class ProjectUseCase {
     private projectRepository: ProjectRepository
@@ -35,6 +36,17 @@ class ProjectUseCase {
             const response = await this.projectRepository.projectDetails(projectId)
             if(response) return { success: true, message: 'Project details fetched successfully', project: response}
             else throw createError(400, 'Project not found in the repository')
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async editProject(projectId: string, data: projectEdit) {
+        try {
+            const response = await this.projectRepository.editProject(projectId, data)
+            
+            if (response) return { success: true, message: 'Project details updated successfully', project: response }
+            else throw createError(500, 'Project details updating failed')
         } catch (error) {
             throw error
         }

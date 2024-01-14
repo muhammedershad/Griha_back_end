@@ -8,6 +8,7 @@ import { ParsedQs } from "qs";
 import { ChangePassword } from "../domain/changePass"
 import BankRepository from "../infrastructure/repository/bankRepository"
 import { BankDetails } from "../domain/bankDetials"
+import createError from 'http-errors'
 
 const encryptService = new BcryptPasswordHashingService();
 const JWT = new JWTService()
@@ -297,6 +298,16 @@ class EmployeeUsecase {
             else return {success: false, message: 'Employee bank details fetching failed'}
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async allSeniorEmployees() {
+        try {
+            const response = await this.employeeRepository.allSeniorEmployees()
+            if (response) return { success: true, message:'All seniors data fetched successfully', allSeniors: response}
+            else throw createError(500, 'Senior employees data fetching failed')
+        } catch (error) {
+            throw error
         }
     }
 }

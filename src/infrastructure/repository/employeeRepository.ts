@@ -198,6 +198,15 @@ class EmployeeRepository {
             console.log(error); 
         }
     }
+
+    async allSeniorEmployees() {
+        try {
+            const response = await EmployeeModel.find({isSenior: true})
+            return response
+        } catch (error) {
+            throw error
+        }
+    }
     
 }
 export default EmployeeRepository;

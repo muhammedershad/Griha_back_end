@@ -1,5 +1,6 @@
 import { NextFunction } from "express";
 import ProjectModel, { IProjects } from "../database/project";
+import { projectEdit } from "../../domain/project";
 
 class ProjectRepository {
     async createProject(data: IProjects) {
@@ -39,6 +40,29 @@ class ProjectRepository {
             return response
         } catch (error) {
             throw error;
+        }
+    }
+
+    async editProject(projectId: string, data: projectEdit) {
+        try {
+            const response = await ProjectModel.findByIdAndUpdate(
+                projectId,
+                {
+                    $set: {
+                        projectName: data?.projectName,
+                        "address.address": data?.address?.address,
+                        "address.district": data?.address?.district,
+                        "address.state": data?.address?.state,
+                        "address.pincode": data?.address?.pincode,
+                        "team.teamLead": data?.teamLead,
+                        location: data?.location
+                    }
+                },
+                { new: true } // This option returns the modified document
+            );
+            return response
+        } catch (error) {
+            throw error
         }
     }
 }
