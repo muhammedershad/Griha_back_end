@@ -14,5 +14,6 @@ router.post('/', (req, res, next) => controller.createProject(req, res, next))
 router.get('/employee-project/:employeeId', (req, res, next) => controller.employeeProject(req, res, next))
 router.get('/project-details/:projectId', (req, res, next) => controller.projectDetails(req, res, next))
 router.patch('/:projectId', (req, res, next) => controller.updateProject(req, res, next))
+router.post('/post-progress/:projectId', (req, res, next) => controller.addProgress(req, res, next))
 
 export default router

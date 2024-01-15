@@ -1,6 +1,6 @@
 import { NextFunction } from "express";
 import ProjectModel, { IProjects } from "../database/project";
-import { projectEdit } from "../../domain/project";
+import { ProjectProgress, projectEdit } from "../../domain/project";
 
 class ProjectRepository {
     async createProject(data: IProjects) {
@@ -26,7 +26,8 @@ class ProjectRepository {
                 .populate("postedBy", "name email") // Populate postedBy with specific fields
                 .populate("team.members", "name email") // Populate team members with specific fields
                 .populate("team.teamLead", "name email") // Populate team lead with specific fields
-                .populate("progress.submittedBy", "name email") // Populate submittedBy with specific fields
+                .populate("clients", "name email") // Populate team lead with specific fields
+                .populate("progress.postedBy", "name email") // Populate submittedBy with specific fields
                 .exec();
             return response;
         } catch (error) {
@@ -37,7 +38,13 @@ class ProjectRepository {
     async projectDetails(projectId: string) {
         try {
             const response = await ProjectModel.findById(projectId)
-            return response
+                .populate("postedBy") // Populate postedBy with specific fields
+                .populate("team.members") // Populate team members with specific fields
+                .populate("team.teamLead") // Populate team lead with specific fields
+                .populate("clients") // Populate team lead with specific fields
+                .populate("progress.postedBy") // Populate submittedBy with specific fields
+                .exec();
+            return response;
         } catch (error) {
             throw error;
         }
@@ -55,14 +62,49 @@ class ProjectRepository {
                         "address.state": data?.address?.state,
                         "address.pincode": data?.address?.pincode,
                         "team.teamLead": data?.teamLead,
-                        location: data?.location
-                    }
+                        "team.members": data?.teamMembers,
+                        clients: data.clients,
+                        location: data?.location,
+                    },
                 },
                 { new: true } // This option returns the modified document
-            );
-            return response
+            )
+                .populate("postedBy") // Populate postedBy with specific fields
+                .populate("team.members") // Populate team members with specific fields
+                .populate("team.teamLead") // Populate team lead with specific fields
+                .populate("clients") // Populate team lead with specific fields
+                .populate("progress.postedBy") // Populate submittedBy with specific fields
+                .exec();
+            return response;
         } catch (error) {
-            throw error
+            throw error;
+        }
+    }
+
+    async addProgress(data: ProjectProgress, projectId: string) {
+        try {
+            const response = await ProjectModel.findByIdAndUpdate(
+                projectId,
+                {
+                    $push: {
+                        progress: {
+                            $each: [data],
+                            $sort: { date: -1 }, // Assuming 'time' is the field you want to sort by
+                        },
+                    },
+                },
+                { new: true }
+            )
+                .populate("postedBy")
+                .populate("team.members")
+                .populate("team.teamLead")
+                .populate("clients")
+                .populate("progress.postedBy")
+                .exec();
+
+            return response;
+        } catch (error) {
+            throw error;
         }
     }
 }

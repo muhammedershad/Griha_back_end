@@ -2,7 +2,7 @@ import { NextFunction } from "express";
 import { IProjects } from "../infrastructure/database/project";
 import ProjectRepository from "../infrastructure/repository/projectRepository";
 import createError from 'http-errors'
-import { projectEdit } from "../domain/project";
+import { ProjectProgress, projectEdit } from "../domain/project";
 
 class ProjectUseCase {
     private projectRepository: ProjectRepository
@@ -47,6 +47,16 @@ class ProjectUseCase {
             
             if (response) return { success: true, message: 'Project details updated successfully', project: response }
             else throw createError(500, 'Project details updating failed')
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async addProgress(data: ProjectProgress, projectId: string) {
+        try {
+            const response = await this.projectRepository.addProgress(data, projectId)
+            if(response) return { success: true, message: 'Project progress added successfully', project: response}
+            else throw createError(400, 'Project progress posting failed')
         } catch (error) {
             throw error
         }

@@ -70,7 +70,7 @@ class ProjectController {
     async updateProject (req: Request, res: Response, next: NextFunction) {
         try {
             const projectId = req.params.projectId
-            let { projectName, address, location, teamLead } = req.body
+            let { projectName, address, location, teamLead, teamMembers, clients } = req.body
             
             if(!projectName.trim()) throw createError(400, 'Enter valid project name')
             if(!address.address.trim()) throw createError(400, 'Enter valid address')
@@ -84,6 +84,26 @@ class ProjectController {
             const response = await this.projectUseCase.editProject(projectId, req.body)
             if (response) return res.status(200).json(response)
             
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async addProgress (req: Request, res: Response, next: NextFunction) {
+        try {
+            let { title, shortDiscription, details, imageUrls, videoUrls, otherFileUrls, postedBy } = req.body
+            let projectId = req.params.projectId
+            console.log(req.body, req.params);
+            
+
+            if(!title.trim()) throw createError(400, 'Enter valid task name')
+            if(!shortDiscription.trim()) throw createError(400, 'Enter valid short description about the progress')
+            if(!details.trim()) throw createError(400, 'Enter details')
+            if(!postedBy.trim()) throw createError(400, 'Employee id is missing')
+            if(!projectId.trim()) throw createError(400, 'Project id is missing')
+
+            const response = await this.projectUseCase.addProgress(req.body, projectId)
+            if (response.success) return res.status(200).json(response) 
         } catch (error) {
             next(error)
         }
