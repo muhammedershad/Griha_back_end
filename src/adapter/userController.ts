@@ -414,6 +414,53 @@ class userController {
             })
         }
     }
+
+    async userDetails (req: Request, res: Response) {
+        try {
+            const { token } = req.body
+            if ( !token ) {
+                return res.status(400).json({success: false, message: 'Invalid token'})
+            }
+            const response = await this.userUsecase.employeeDetails( token )
+            if ( response?.success ) {
+                return res.status(200).json(response)
+            } else {
+                return res.status(400).json(response)
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in logout'
+            })
+        }
+    }
+
+    async userProfilePicUpdate(req: Request, res: Response) {
+        try {
+            let {imageUrl, userId} = req.body
+
+            imageUrl = imageUrl.trim()
+            userId = userId.trim()
+
+            if ( !imageUrl || !userId ) {
+                return res.status(400).json({success: false, message: "Invalid imageUrl or userId"})
+            }
+
+            const saveUserPhoto = await this.userUsecase.saveUserPhoto(userId, imageUrl )
+            if ( saveUserPhoto?.success ) {
+                return res.status(200).json(saveUserPhoto)
+            } else {
+                return res.status(400).json(saveUserPhoto)
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Error in logout'
+            })
+        }
+    }
 }
 
 export default userController;

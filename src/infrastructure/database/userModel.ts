@@ -8,7 +8,7 @@ export interface IUsers extends Document {
   Password: string;
   Phone: number;
   Email: string;
-  Image: string | null;
+  image: string | null;
   Client: boolean;
   IsBlocked: boolean;
   CreatedAt: Date;
@@ -21,7 +21,7 @@ const UsersSchema: Schema = new Schema({
   Password: { type: String, required: true },
   Phone: { type: Number, required: true },
   Email: { type: String, required: true, unique: true },
-  Image: { type: String },
+  image: { type: String },
   Client: { type: Boolean, required: true, default: false },
   IsBlocked: { type: Boolean, required: true, default: false },
   CreatedAt: {type: Date, default: new Date()}

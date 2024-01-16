@@ -61,6 +61,26 @@ class ProjectUseCase {
             throw error
         }
     }
+
+    async userProject(userId: string) {
+        try {
+            const response = await this.projectRepository.userProject(userId)
+            if (response) return {success: true, message: 'User projects fetched successfully', projects: response}
+            else throw createError(400, 'Error in fetching User projects')
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async allPorjects() {
+        try {
+            const response = await this.projectRepository.allPorjects()
+            if (response) return { success: true, messge: 'All project data fetched', allProjects: response}
+            else throw createError(500, 'Failed all project data fetching')
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 export default ProjectUseCase

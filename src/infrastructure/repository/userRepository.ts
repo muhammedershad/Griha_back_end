@@ -172,5 +172,30 @@ class UserRepository {
             console.log(error);
         }
     }
+
+    async userDetails( userId: string) {
+        try {
+            const user = await UserModel.findById( userId )
+            return user
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    async saveUserPhoto( userId: string, imageUrl: string ) {
+        try {
+            const photoSaved = await UserModel.findOneAndUpdate(
+                { _id: userId },
+                { $set: { image: imageUrl } },
+                { new: true }
+            );
+            // console.log(photoSaved);
+            return photoSaved;
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
 }
 export default UserRepository;

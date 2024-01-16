@@ -35,7 +35,7 @@ export interface IProjects extends Document {
                   time: Date | null;
               }[]
             | null;
-    };
+    }[] | null;
 }
 
 const ProjectsSchema: Schema = new Schema({

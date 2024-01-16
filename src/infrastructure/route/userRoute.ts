@@ -32,6 +32,8 @@ router.patch('/block-user', adminAuthMiddleware, ( req, res ) => controller.bloc
 router.patch( '/change-user-role', adminAuthMiddleware, ( req, res ) => controller.changeUserRole( req, res ))
 router.post( '/logout', ( req, res ) => controller.logout( req, res ))
 router.get('/all-clients', employeeAuthMiddleware, (req, res) => controller.allClients(req, res))
+router.post('/user', authMiddleware, (req, res) => controller.userDetails(req, res))
+router.patch('/update-user-profile-photo', authMiddleware, (req, res) => controller.userProfilePicUpdate(req, res))
 
 
 export { controller }

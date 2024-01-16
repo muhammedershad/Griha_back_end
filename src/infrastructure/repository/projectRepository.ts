@@ -35,6 +35,23 @@ class ProjectRepository {
         }
     }
 
+    async userProject(userId: string) {
+        try {
+            const response = await ProjectModel.find({
+                clients: userId,
+            })
+                .populate("postedBy") // Populate postedBy with specific fields
+                .populate("team.members") // Populate team members with specific fields
+                .populate("team.teamLead") // Populate team lead with specific fields
+                .populate("clients") // Populate team lead with specific fields
+                .populate("progress.postedBy") // Populate submittedBy with specific fields
+                .exec();
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async projectDetails(projectId: string) {
         try {
             const response = await ProjectModel.findById(projectId)
@@ -89,7 +106,7 @@ class ProjectRepository {
                     $push: {
                         progress: {
                             $each: [data],
-                            $sort: { date: -1 }, // Assuming 'time' is the field you want to sort by
+                            $sort: { date: -1 }, // Sort the array by date in descending order
                         },
                     },
                 },
@@ -102,6 +119,22 @@ class ProjectRepository {
                 .populate("progress.postedBy")
                 .exec();
 
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async allPorjects() {
+        try {
+            const response = await ProjectModel.find()
+                .populate("postedBy")
+                .populate("team.members")
+                .populate("team.teamLead")
+                .populate("clients")
+                .populate("progress.postedBy")
+                .exec();
+                
             return response;
         } catch (error) {
             throw error;

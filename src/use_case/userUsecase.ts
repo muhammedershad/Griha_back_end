@@ -113,7 +113,7 @@ class Userusecase {
                 user.Password = ''
 
                 if ( verifyPassword ) {
-                    const token = await JWT.createToken(user.Email, "user");
+                    const token = await JWT.createToken(user._id, "user");
                     
                     if (token) {
                         return {
@@ -204,6 +204,57 @@ class Userusecase {
             else return {success: false, message: 'All Clients data fetching failed'}
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async employeeDetails (token: string) {
+        try {
+            const auth = await JWT.verifyToken(token);
+            // console.log(auth,'jwt details')
+            if (!auth.success || auth.role !== 'user') {
+                return {
+                    success: false,
+                    message: "Unauthorized Request",
+                }
+            }
+            const userId = auth.data.userData
+            // console.log(auth.data.userData,'auth.data');
+            const user = await this.userRepository.userDetails( userId )
+            
+            if ( user ) {
+                return {
+                    success: true,
+                    message: 'Found user',
+                    user: user
+                }
+            } else {
+                return {
+                    success: false,
+                    message: 'User not found'
+                }
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    async saveUserPhoto(userId: string, imageUrl: string) {
+        try {
+            const photoSaved = await this.userRepository.saveUserPhoto( userId, imageUrl)
+            if ( photoSaved ) {
+                return {
+                    success: true,
+                    message: 'Image updated successfully'
+                }
+            } else {
+                return {
+                    success: false,
+                    message: 'Failure in updating image'
+                }
+            }
+        } catch (error) {
+            console.log(error);   
         }
     }
 }

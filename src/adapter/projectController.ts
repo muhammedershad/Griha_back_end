@@ -54,6 +54,18 @@ class ProjectController {
         }
     } 
 
+    async userProject( req: Request, res: Response, next: NextFunction ) {
+        try {
+            const userId = req.params.userId
+            if (!userId) throw createError(400, 'User id is missing')
+
+            const response = await this.projectUseCase.userProject(userId)
+            if (response) return res.status(200).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
     async projectDetails (req: Request, res: Response, next: NextFunction) {
         try {
             const projectId: string = req.params.projectId
@@ -104,6 +116,15 @@ class ProjectController {
 
             const response = await this.projectUseCase.addProgress(req.body, projectId)
             if (response.success) return res.status(200).json(response) 
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async allPorjects(req: Request, res: Response, next: NextFunction) {
+        try {
+            const response = await this.projectUseCase.allPorjects()
+            if (response.success) return res.status(200).json(response)
         } catch (error) {
             next(error)
         }
