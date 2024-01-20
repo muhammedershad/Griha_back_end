@@ -3,9 +3,11 @@ import ProjectController from "../../adapter/projectController";
 import ProjectUseCase from "../../use_case/projectUseCase";
 import ProjectRepository from "../repository/projectRepository";
 import adminAuthMiddleware from "../middleware/adminAuthMiddelware";
+import FeaturedProjectRepository from "../repository/FeaturedProjectsRepository";
 
 const repository = new ProjectRepository()
-const use_case = new ProjectUseCase( repository )
+const featuredProjectRepository = new FeaturedProjectRepository()
+const use_case = new ProjectUseCase( repository, featuredProjectRepository )
 const controller = new ProjectController( use_case )
 
 const router = express.Router()

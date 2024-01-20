@@ -3,11 +3,14 @@ import { IProjects } from "../infrastructure/database/project";
 import ProjectRepository from "../infrastructure/repository/projectRepository";
 import createError from 'http-errors'
 import { ProjectProgress, projectEdit } from "../domain/project";
+import FeaturedProjectRepository from "../infrastructure/repository/FeaturedProjectsRepository";
 
 class ProjectUseCase {
     private projectRepository: ProjectRepository
-    constructor( projectRepository: ProjectRepository ) {
+    private featuredProjectRepository: FeaturedProjectRepository
+    constructor( projectRepository: ProjectRepository, featuredProjectRepository: FeaturedProjectRepository ) {
         this.projectRepository = projectRepository
+        this.featuredProjectRepository = featuredProjectRepository
     }
 
     async createProject (data: IProjects) {
