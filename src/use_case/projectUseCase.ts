@@ -4,6 +4,7 @@ import ProjectRepository from "../infrastructure/repository/projectRepository";
 import createError from 'http-errors'
 import { ProjectProgress, projectEdit } from "../domain/project";
 import FeaturedProjectRepository from "../infrastructure/repository/FeaturedProjectsRepository";
+import { IFeaturedProject } from "../infrastructure/database/featuredProjects";
 
 class ProjectUseCase {
     private projectRepository: ProjectRepository
@@ -80,6 +81,26 @@ class ProjectUseCase {
             const response = await this.projectRepository.allPorjects()
             if (response) return { success: true, messge: 'All project data fetched', allProjects: response}
             else throw createError(500, 'Failed all project data fetching')
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async addFeaturedProject(data: IFeaturedProject) {
+        try {
+            const response = await this.featuredProjectRepository.addFeaturedProject(data)
+            if(response) return { success: true, message: 'Featured project added successfully'}
+            else throw createError(500, 'Faild in adding new featured project')
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async allFeaturedProjects() {
+        try {
+            const response = await this.featuredProjectRepository.allFeaturedProjects()
+            if(response) return { success: true, message: 'All featured project data fetching successful', allFeaturedProjects:response }
+            else throw createError(500, 'Faild to fetch all featured projects')
         } catch (error) {
             throw error
         }

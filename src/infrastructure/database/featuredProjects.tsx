@@ -9,6 +9,7 @@ export interface IFeaturedProject extends Document {
     siteArea: string;
     builtupArea: string;
     youtubeLink: string;
+    category: string;
     images: string[];
 }
 
@@ -20,9 +21,10 @@ const FeaturedProjectSchema: Schema = new Schema({
     siteArea: { type: String, required: true },
     builtupArea: { type: String, required: true },
     youtubeLink: { type: String },
+    category: { type: String, required: true },
     images: [{type: String}]
 });
 
-const FeaturedProject = mongoose.model<IFeaturedProject>("Projects", FeaturedProjectSchema);
+const FeaturedProject = mongoose.model<IFeaturedProject>("FeaturedProjects", FeaturedProjectSchema);
 
 export default FeaturedProject;

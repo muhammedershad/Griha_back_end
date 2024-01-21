@@ -7,7 +7,7 @@ class ProjectRepository {
         try {
             const project = new ProjectModel(data);
             const response = project.save();
-            console.log(response, "repository");
+            // console.log(response, "repository");
             return response;
         } catch (error) {
             throw error;

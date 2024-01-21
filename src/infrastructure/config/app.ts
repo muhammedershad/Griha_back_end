@@ -7,6 +7,7 @@ import path from "path";
 import logger from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { links } from "./links";
 
 //passport
 const passport = require("passport");
@@ -35,26 +36,11 @@ export const createServer = () => {
         app.use(express.urlencoded({ extended: false }));
         app.use(express.static(path.join(__dirname, "public")));
 
-        // Enable CORS for all routes
-        // app.use((req, res, next) => {
-        //     res.setHeader('Access-Control-Allow-Origin', '*');
-        //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-        //     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-        //     next();
-        // });
-        // app.use((req, res, next) => {
-        //     res.header('Access-Control-Allow-Origin', '*');
-        //     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-        //     res.header('Access-Control-Allow-Headers', 'Content-Type');
-        //     res.header('Access-Control-Allow-Credentials', 'true');
-        //     next();
-        //   });
-
         const corsOptions = {
-            origin: "http://localhost:8080", // Replace with the actual origin of your client
-            methods: "GET, POST, OPTIONS, PATCH, PUT", // Include the necessary HTTP methods
-            credentials: true, // Allow credentials (cookies)
-            optionsSuccessStatus: 204, // Set the preflight response status to 204
+            origin: [links.BASE_URL_LOCAL,links.BASE_URL,],
+            methods: "GET, POST, OPTIONS, PATCH, PUT",
+            credentials: true,
+            optionsSuccessStatus: 204,
         };
         app.use(cors(corsOptions));
 

@@ -21,4 +21,8 @@ router.patch('/:projectId', (req, res, next) => controller.updateProject(req, re
 router.post('/post-progress/:projectId', (req, res, next) => controller.addProgress(req, res, next))
 router.get('/all-projects', adminAuthMiddleware, (req, res, next) => controller.allPorjects(req, res, next))
 
+// featued projects
+router.post('/featured-projects', (req, res, next) => controller.addFeaturedProject(req, res, next))
+router.get('/featured-projects', (req, res, next) => controller.allFeaturedProjects(req, res, next))
+
 export default router

@@ -129,6 +129,26 @@ class ProjectController {
             next(error)
         }
     }
+
+    async addFeaturedProject(req: Request, res: Response, next: NextFunction) {
+        try {
+            let {projectName, cilent, siteArea, location, builtupArea, youtubeLink, category, details, images} = req.body
+            
+            const response = await this.projectUseCase.addFeaturedProject(req.body)
+            if (response) return res.status(200).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async allFeaturedProjects(req: Request, res: Response, next: NextFunction) {
+        try {
+            const response = await this.projectUseCase.allFeaturedProjects()
+            if(response) return res.status(200).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
     
 }
 
