@@ -34,6 +34,7 @@ router.post( '/logout', ( req, res ) => controller.logout( req, res ))
 router.get('/all-clients', employeeAuthMiddleware, (req, res) => controller.allClients(req, res))
 router.post('/user', authMiddleware, (req, res) => controller.userDetails(req, res))
 router.patch('/update-user-profile-photo', authMiddleware, (req, res) => controller.userProfilePicUpdate(req, res))
+router.get('/:userId', (req, res, next) => controller.user(req, res, next))
 
 
 export { controller }

@@ -8,6 +8,8 @@ import logger from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { links } from "./links";
+import messageRoute from '../../infrastructure/route/message'
+import conversationRoute from "../../infrastructure/route/conversation";
 
 //passport
 const passport = require("passport");
@@ -49,6 +51,8 @@ export const createServer = () => {
         app.use("/api/admin", adminRouter);
         app.use("/api/employee", employeeRouter);
         app.use("/api/project", projectRouter);
+        app.use('/api/message', messageRoute);
+        app.use("/api/conversation", conversationRoute);
         
         app.use(errorHandling);
 

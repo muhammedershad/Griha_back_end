@@ -12,6 +12,7 @@ import { sendEmail } from "../use_case/interface/emailService";
 import user from "../domain/user";
 import { ParsedQs } from "qs";
 import { ObjectId } from "mongoose";
+import { NextFunction } from "express-serve-static-core";
 
 class userController {
     private userUsecase: Userusecase;
@@ -461,6 +462,23 @@ class userController {
             })
         }
     }
+
+    async user(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = req.params.userId
+            if(!userId) throw createError(400, 'User id is missing')
+
+            const response = await this.userUsecase.user(userId)
+            if(response) return res.status(200).json(response)
+            
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default userController;
+function createError(arg0: number, arg1: string) {
+    throw new Error("Function not implemented.");
+}
+

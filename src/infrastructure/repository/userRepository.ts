@@ -197,5 +197,14 @@ class UserRepository {
             
         }
     }
+
+    async user(data: string) {
+        try {
+            const response = await UserModel.findById(data)
+            return response
+        } catch (error) {
+            throw error
+        }
+    }
 }
 export default UserRepository;

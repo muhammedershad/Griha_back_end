@@ -257,6 +257,20 @@ class Userusecase {
             console.log(error);   
         }
     }
+
+    async user(data: string) {
+        try {
+            const response = await this.userRepository.user(data)
+            if(response) return { success: true, message: 'User data fetched', user: response}
+            else throw createError( 500, 'User data not found in data base')
+        } catch (error) {
+            throw error
+        }
+    } 
 }
 
 export default Userusecase;
+function createError(arg0: number, arg1: string) {
+    throw new Error("Function not implemented.");
+}
+
