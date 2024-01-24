@@ -10,14 +10,18 @@ import cookieParser from "cookie-parser";
 import { links } from "./links";
 import messageRoute from '../../infrastructure/route/message'
 import conversationRoute from "../../infrastructure/route/conversation";
+import http from 'http'
 
 //passport
 const passport = require("passport");
 import cookieSession from "cookie-session";
 import errorHandling from "../middleware/errorHandling";
+import configureSocket from "./socket.io";
 require("../config/passport-config");
 
 const app = express();
+export const server = http.createServer(app);
+const io = configureSocket(server) 
 
 //passport configuration
 app.use(
