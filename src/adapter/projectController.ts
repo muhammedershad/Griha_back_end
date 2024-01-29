@@ -141,9 +141,35 @@ class ProjectController {
         }
     }
 
+    async updateFeaturedProject(req: Request, res: Response, next: NextFunction) {
+        try {
+            let {projectName, cilent, siteArea, location, builtupArea, youtubeLink, category, details, images, _id} = req.body
+
+            const response = await this.projectUseCase.updateFeaturedProject(req.body)
+            if (response) return res.status(200).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
     async allFeaturedProjects(req: Request, res: Response, next: NextFunction) {
         try {
-            const response = await this.projectUseCase.allFeaturedProjects()
+            const category = req.params.category.trim()
+            const search: string = req.query.search ? req.query.search.toString() : '';
+            const page: number = parseInt(req.query.page as string) || 1; 
+            const response = await this.projectUseCase.allFeaturedProjects(category, search, page)
+            if(response) return res.status(200).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async featuredPorjectDetails(req: Request, res: Response, next: NextFunction) {
+        try {
+            const projectId = req.params.projectId
+            if(!projectId) throw createError(400, 'Invalid Project Id')
+
+            const response = await this.projectUseCase.featuredPorjectDetails(projectId)
             if(response) return res.status(200).json(response)
         } catch (error) {
             next(error)

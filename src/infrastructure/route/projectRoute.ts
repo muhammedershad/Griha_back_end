@@ -23,6 +23,8 @@ router.get('/all-projects', adminAuthMiddleware, (req, res, next) => controller.
 
 // featued projects
 router.post('/featured-projects', (req, res, next) => controller.addFeaturedProject(req, res, next))
-router.get('/featured-projects', (req, res, next) => controller.allFeaturedProjects(req, res, next))
+router.put('/featured-projects', (req, res, next) => controller.updateFeaturedProject(req, res, next))
+router.get('/featured-projects/:category', (req, res, next) => controller.allFeaturedProjects(req, res, next))
+router.get('/featured-project-details/:projectId', (req, res, next) => controller.featuredPorjectDetails(req, res, next))
 
 export default router

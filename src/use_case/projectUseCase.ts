@@ -5,6 +5,7 @@ import createError from 'http-errors'
 import { ProjectProgress, projectEdit } from "../domain/project";
 import FeaturedProjectRepository from "../infrastructure/repository/FeaturedProjectsRepository";
 import { IFeaturedProject } from "../infrastructure/database/featuredProjects";
+import { ParsedQs } from "qs";
 
 class ProjectUseCase {
     private projectRepository: ProjectRepository
@@ -96,11 +97,31 @@ class ProjectUseCase {
         }
     }
 
-    async allFeaturedProjects() {
+    async updateFeaturedProject(data: IFeaturedProject) {
         try {
-            const response = await this.featuredProjectRepository.allFeaturedProjects()
-            if(response) return { success: true, message: 'All featured project data fetching successful', allFeaturedProjects:response }
+            const response = await this.featuredProjectRepository.updateFeaturedProject(data)
+            if(response) return { success: true, message: 'Featured project updated successfully', project: response}
+            else throw createError(500, 'Faild in updating featured project')
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async allFeaturedProjects(category: string, search: string, page: number) {
+        try {
+            const response = await this.featuredProjectRepository.allFeaturedProjects(category, search, page)
+            if(response.response) return { success: true, message: 'All featured project data fetching successful', allFeaturedProjects:response.response, totalPages: (Math.ceil(response.totalItems / 12) ) }
             else throw createError(500, 'Faild to fetch all featured projects')
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async featuredPorjectDetails(projectId: string) {
+        try {
+            const response = await this.featuredProjectRepository.featuredPorjectDetails(projectId)
+            if(response) return { success: true, message: 'Featured project details fetched successfully', projectDetails: response }
+            else throw createError(500, 'Not possible to find a project with this project id')
         } catch (error) {
             throw error
         }
