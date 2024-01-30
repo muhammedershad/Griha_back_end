@@ -1,6 +1,7 @@
 import { NextFunction } from "express";
 import ProjectModel, { IProjects } from "../database/project";
 import { ProjectProgress, projectEdit } from "../../domain/project";
+import mongoose, { Types, Schema } from "mongoose";
 
 class ProjectRepository {
     async createProject(data: IProjects) {
@@ -134,8 +135,58 @@ class ProjectRepository {
                 .populate("clients")
                 .populate("progress.postedBy")
                 .exec();
-                
+
             return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // async projectProgress(projectId: string, progressId: string) {
+    //     try {
+    //         const result: IProjects | null = await ProjectModel.findOne({ _id: projectId });
+    //         return result
+
+    //     } catch (error) {
+    //         throw error
+    //     }
+    // }
+
+    async addComment(
+        comment: string,
+        projectId: string,
+        progressId: string,
+        userId: string
+    ) {
+        try {
+            const project: IProjects | null = await ProjectModel.findById(
+                projectId
+            );
+
+            if (!project) {
+                throw new Error("Project not found");
+            }
+            // Find the progress object within the progress array based on progressId
+            const progressObject = project?.progress.find(
+                (progress) => progress._id.toString() === progressId
+            );
+
+            if (!progressObject) {
+                throw new Error("Progress not found in the project");
+            }
+
+            // Add a new comment to the comments array of the progress object
+            progressObject.comments.push({
+                comment,
+                user: new Types.ObjectId(userId), // Correct way to create a new ObjectId
+                time: new Date(),
+            });
+
+            // Save the updated project
+            await project.save();
+
+            // You can return the updated project or a success message
+            return project;
         } catch (error) {
             throw error;
         }

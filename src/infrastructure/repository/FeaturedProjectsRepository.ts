@@ -3,6 +3,7 @@ import FeaturedProject, {
     IFeaturedProject,
 } from "../database/featuredProjects";
 import { ParsedQs } from "qs";
+import mongoose from "mongoose";
 
 class FeaturedProjectRepository {
     async addFeaturedProject(data: IFeaturedProject) {
@@ -31,6 +32,7 @@ class FeaturedProjectRepository {
 
     async allFeaturedProjects(category: string, search: string, page: number) {
         try {
+            console.log("here repository")
             let response;
             let totalItems;
             if (category === "all") {
@@ -55,6 +57,7 @@ class FeaturedProjectRepository {
                     projectName: { $regex: regex },
                 });
             }
+            console.log(response, totalItems)
             return { response, totalItems };
         } catch (error) {
             throw error;
@@ -63,7 +66,8 @@ class FeaturedProjectRepository {
 
     async featuredPorjectDetails(projectId: string) {
         try {
-            const response = await FeaturedProject.findById(projectId);
+            const newid = new mongoose.Types.ObjectId(projectId)
+            const response = await FeaturedProject.findById(newid);
             return response;
         } catch (error) {
             throw error;

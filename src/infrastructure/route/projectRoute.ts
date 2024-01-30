@@ -18,8 +18,10 @@ router.get('/employee-project/:employeeId', (req, res, next) => controller.emplo
 router.get('/user-project/:userId', (req, res, next) => controller.userProject(req, res, next))
 router.get('/project-details/:projectId', (req, res, next) => controller.projectDetails(req, res, next))
 router.patch('/:projectId', (req, res, next) => controller.updateProject(req, res, next))
+// router.get('/:projectId/:progressId', (req, res, next) => controller.projectProgress(req, res, next))
 router.post('/post-progress/:projectId', (req, res, next) => controller.addProgress(req, res, next))
 router.get('/all-projects', adminAuthMiddleware, (req, res, next) => controller.allPorjects(req, res, next))
+router.post('/comment', (req, res, next) => controller.addComment(req, res, next))
 
 // featued projects
 router.post('/featured-projects', (req, res, next) => controller.addFeaturedProject(req, res, next))

@@ -109,6 +109,7 @@ class ProjectUseCase {
 
     async allFeaturedProjects(category: string, search: string, page: number) {
         try {
+            console.log("here usecase start")
             const response = await this.featuredProjectRepository.allFeaturedProjects(category, search, page)
             if(response.response) return { success: true, message: 'All featured project data fetching successful', allFeaturedProjects:response.response, totalPages: (Math.ceil(response.totalItems / 12) ) }
             else throw createError(500, 'Faild to fetch all featured projects')
@@ -122,6 +123,26 @@ class ProjectUseCase {
             const response = await this.featuredProjectRepository.featuredPorjectDetails(projectId)
             if(response) return { success: true, message: 'Featured project details fetched successfully', projectDetails: response }
             else throw createError(500, 'Not possible to find a project with this project id')
+        } catch (error) {
+            throw error
+        }
+    }
+
+    // async projectProgress(projectId: string, progressId: string) {
+    //     try {
+    //         const response = await this.projectRepository.projectProgress(projectId, progressId)
+    //         if(response) {
+    //             return { success: true, message: 'Project pogress data fetching successful', project: response}
+    //         } 
+    //         else throw createError(500, 'Not possible to fetch the project progress details')
+    //     } catch (error) {
+    //         throw error
+    //     }
+    // }
+
+    async addComment(comment:string, projectId: string, progressId: string, userId: string) {
+        try {
+            const response = await this.projectRepository.addComment(comment, projectId, progressId, userId)
         } catch (error) {
             throw error
         }

@@ -1,7 +1,7 @@
-import mongoose, { Schema, Document, ObjectId } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface IFeaturedProject extends Document {
-    _id: ObjectId;
+    _id: Types.ObjectId;
     projectName: string;
     client: string;
     details: string;

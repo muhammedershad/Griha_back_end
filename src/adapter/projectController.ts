@@ -123,6 +123,7 @@ class ProjectController {
 
     async allPorjects(req: Request, res: Response, next: NextFunction) {
         try {
+            console.log('here')
             const response = await this.projectUseCase.allPorjects()
             if (response.success) return res.status(200).json(response)
         } catch (error) {
@@ -132,6 +133,7 @@ class ProjectController {
 
     async addFeaturedProject(req: Request, res: Response, next: NextFunction) {
         try {
+            console.log('here')
             let {projectName, cilent, siteArea, location, builtupArea, youtubeLink, category, details, images} = req.body
             
             const response = await this.projectUseCase.addFeaturedProject(req.body)
@@ -154,13 +156,15 @@ class ProjectController {
 
     async allFeaturedProjects(req: Request, res: Response, next: NextFunction) {
         try {
+            console.log("here controller")
             const category = req.params.category.trim()
             const search: string = req.query.search ? req.query.search.toString() : '';
             const page: number = parseInt(req.query.page as string) || 1; 
             const response = await this.projectUseCase.allFeaturedProjects(category, search, page)
             if(response) return res.status(200).json(response)
         } catch (error) {
-            next(error)
+            console.log('error')
+            // next(error)
         }
     }
 
@@ -175,7 +179,35 @@ class ProjectController {
             next(error)
         }
     }
+
+    // async projectProgress(req: Request, res: Response, next: NextFunction) {
+    //     try {
+    //         const projectId = req.params.projectId
+    //         const progressId = req.params.progressId            
+    //         if(!projectId) throw createError(400, 'Invalid Project Id')
+    //         if(!progressId) throw createError(400, 'Invalid Progress Id')
+
+    //         const response = await this.projectUseCase.projectProgress(projectId, progressId)
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
     
+    async addComment(req: Request, res: Response, next: NextFunction) {
+        try {
+            let { comment, projectId, progressId, userId } = req.body
+            console.log(req.body);
+            if(!comment.trim()) throw createError(400, 'Invalid commment')
+            if(!projectId.trim()) throw createError(400, 'Invalid project id')
+            if(!progressId.trim()) throw createError(400, 'Invalid progress id')
+            if(!userId.trim()) throw createError(400, 'Invalid user id')
+
+            const response = await this.projectUseCase.addComment(comment, progressId, progressId, userId)
+            
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default ProjectController;

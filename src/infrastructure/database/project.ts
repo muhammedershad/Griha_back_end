@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, ObjectId } from "mongoose";
+import mongoose, { Schema, Document, ObjectId, Types } from "mongoose";
 
 export interface IProjects extends Document {
     _id: ObjectId;
@@ -19,7 +19,7 @@ export interface IProjects extends Document {
         pincode: string;
     };
     progress: {
-        _id: ObjectId | null;
+        _id: ObjectId 
         date: Date | null;
         details: string | null;
         shortDiscription: string | null;
@@ -30,12 +30,11 @@ export interface IProjects extends Document {
         postedBy: string;
         comments:
             | {
-                  comment: string | null;
-                  user: ObjectId | null;
-                  time: Date | null;
+                  comment: string 
+                  user: Types.ObjectId
+                  time: Date 
               }[]
-            | null;
-    }[] | null;
+    }[]
 }
 
 const ProjectsSchema: Schema = new Schema({
