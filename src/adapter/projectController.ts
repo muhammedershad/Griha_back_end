@@ -196,13 +196,13 @@ class ProjectController {
     async addComment(req: Request, res: Response, next: NextFunction) {
         try {
             let { comment, projectId, progressId, userId } = req.body
-            console.log(req.body);
             if(!comment.trim()) throw createError(400, 'Invalid commment')
             if(!projectId.trim()) throw createError(400, 'Invalid project id')
             if(!progressId.trim()) throw createError(400, 'Invalid progress id')
             if(!userId.trim()) throw createError(400, 'Invalid user id')
 
-            const response = await this.projectUseCase.addComment(comment, progressId, progressId, userId)
+            const response = await this.projectUseCase.addComment(comment, projectId, progressId, userId)
+            if(response) return res.status(200).json(response)
             
         } catch (error) {
             next(error)

@@ -143,6 +143,8 @@ class ProjectUseCase {
     async addComment(comment:string, projectId: string, progressId: string, userId: string) {
         try {
             const response = await this.projectRepository.addComment(comment, projectId, progressId, userId)
+            if(response) return {success: true, message: 'Comment added successfully', project: response}
+            else throw createError(500, 'Error in posting comment')
         } catch (error) {
             throw error
         }

@@ -185,8 +185,7 @@ class ProjectRepository {
             // Save the updated project
             await project.save();
 
-            // You can return the updated project or a success message
-            return project;
+            return project
         } catch (error) {
             throw error;
         }

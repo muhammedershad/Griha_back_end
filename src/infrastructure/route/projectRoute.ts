@@ -20,7 +20,7 @@ router.get('/project-details/:projectId', (req, res, next) => controller.project
 router.patch('/:projectId', (req, res, next) => controller.updateProject(req, res, next))
 // router.get('/:projectId/:progressId', (req, res, next) => controller.projectProgress(req, res, next))
 router.post('/post-progress/:projectId', (req, res, next) => controller.addProgress(req, res, next))
-router.get('/all-projects', adminAuthMiddleware, (req, res, next) => controller.allPorjects(req, res, next))
+router.get('/all-projects',  (req, res, next) => controller.allPorjects(req, res, next))
 router.post('/comment', (req, res, next) => controller.addComment(req, res, next))
 
 // featued projects
