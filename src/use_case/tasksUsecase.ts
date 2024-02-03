@@ -27,6 +27,16 @@ class TasksUsecase {
             throw error
         }
     }
+
+    async employeeAllTasks( employeeId: string ) {
+        try {
+            const response = await this.tasksRepository.employeeAllTasks(employeeId)
+            if(response) return { success: true, message: 'Employee all tasks fetched successfully', tasks: response}
+            else throw createError(500, 'Failed to fetch employee all tasks')
+        } catch (error) {
+            throw error
+        }
+    }
     
 }
 

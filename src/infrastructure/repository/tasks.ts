@@ -21,6 +21,20 @@ class TasksRepository {
             throw error
         }
     }
+
+    async employeeAllTasks( employeeId: string ) {
+        try {
+            const response = await Tasks.find({
+                $or: [
+                  { assignedTo: employeeId },
+                  { assignedBy: employeeId }
+                ]
+              });
+            return response
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 export default TasksRepository;

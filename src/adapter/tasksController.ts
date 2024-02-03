@@ -53,6 +53,19 @@ class TasksController {
         }
     }
 
+    async employeeAllTasks(req: Request, res: Response, next: NextFunction) {
+        try {
+            const employeeId = req.params.employeeId
+
+            if(!employeeId) throw createError(400, 'Invalid employee id')
+
+            const response = await this.tasksUsecase.employeeAllTasks(employeeId)
+            return res.status(200).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }
 
 export default TasksController
