@@ -37,6 +37,16 @@ class TasksUsecase {
             throw error
         }
     }
+
+    async taskDetials( taskId: string ) {
+        try {
+            const response = await this.tasksRepository.taskDetials( taskId )
+            if(response) return { success: true, message: 'Task details fetched successfully', task:response }
+            else throw createError(500, 'Failed to fetch task details')
+        } catch (error) {
+            throw error
+        }
+    }
     
 }
 

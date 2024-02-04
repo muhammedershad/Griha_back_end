@@ -66,6 +66,17 @@ class TasksController {
         }
     }
 
+    async taskDetials(req: Request, res: Response, next: NextFunction) {
+        try {
+            const taskId = req.params.taskId
+            if(!taskId) throw createError(400, 'Invalid task Id')
+            const response = await this.tasksUsecase.taskDetials(taskId)
+            return res.status(200).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }
 
 export default TasksController
