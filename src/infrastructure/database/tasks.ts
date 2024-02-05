@@ -21,6 +21,12 @@ export interface ITasks extends Document {
               user: Types.ObjectId;
               time: Date;
           }[];
+    response: {
+        details: string;
+        user: Types.ObjectId;
+        time: Date;
+        attachments:string[]
+    }[];
 }
 
 const TasksSchema: Schema = new Schema({
@@ -45,6 +51,17 @@ const TasksSchema: Schema = new Schema({
                 ref: "Employees",
             },
             time: { type: Date, default: new Date() },
+        },
+    ],
+    response: [
+        {
+            details: { type: String },
+            user: {
+                type: Schema.Types.ObjectId,
+                ref: "Employees",
+            },
+            time: { type: Date, default: new Date() },
+            attachments: [{ type: String }],
         },
     ],
 });

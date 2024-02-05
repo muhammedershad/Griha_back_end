@@ -77,6 +77,38 @@ class TasksController {
         }
     }
 
+    async addResponse(req: Request, res: Response, next: NextFunction) {
+        try {
+            let { taskId, details, user, attachments } = req.body
+            console.log(req.body);
+            
+            req.body.taskId = null
+
+            if(!taskId.trim()) throw createError(400, 'Invalid task id')
+            if(!details.trim()) throw createError(400, 'Invalid details')
+            if(!user.trim()) throw createError(400, 'Invalid user id')
+
+            const response = await this.tasksUsecase.addResponse( taskId, req.body )
+            return res.status(200).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async addComment(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { comment, user, taskId } = req.body
+            if( !comment.trim()) throw createError(400, 'Invalid comment')
+            if( !user.trim()) throw createError(400, 'Invalid user id')
+            if( !taskId.trim()) throw createError(400, 'Invalid taks id')
+
+            const response = await this.tasksUsecase.addComment(taskId, req.body)
+            return res.status(200).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }
 
 export default TasksController
