@@ -12,6 +12,7 @@ import messageRoute from '../../infrastructure/route/message'
 import conversationRoute from "../../infrastructure/route/conversation";
 import http from 'http'
 import tasksRouter from '../route/tasksRoutes'
+import meetingRouter from '../route/meetingRoute'
 
 //passport
 const passport = require("passport");
@@ -59,6 +60,7 @@ export const createServer = () => {
         app.use('/api/message', messageRoute);
         app.use("/api/conversation", conversationRoute);
         app.use("/api/tasks", tasksRouter);
+        app.use("/api/meeting", meetingRouter)
         
         app.use(errorHandling);
 
