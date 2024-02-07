@@ -12,5 +12,10 @@ const router = express.Router()
 // router.get('/', ( req, res, next ) => controller.test( req, res, next ));
 router.post('/', (req, res, next) => controller.addTimeSlot( req, res, next ))
 router.get('/', (req, res, next) => controller.getTimeSlotForEmployee( req, res, next))
+router.patch('/:meetingId', (req, res, next) => controller.cancelTimeSlot( req, res, next))
+router.get('/allTimeSlots', (req, res, next) => controller.allTimeSlotForUser( req, res, next))
+router.post('/book', (req, res, next) => controller.bookMeeting( req, res, next))
+router.get('/book', (req, res, next) => controller.getScheduledMeetingOfUser( req, res, next))
+router.get('/employee-meetings', (req, res, next) => controller.getScheduledMeetingOfEmployee( req, res, next))
 
 export default router

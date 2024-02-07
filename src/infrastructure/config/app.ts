@@ -13,6 +13,7 @@ import conversationRoute from "../../infrastructure/route/conversation";
 import http from 'http'
 import tasksRouter from '../route/tasksRoutes'
 import meetingRouter from '../route/meetingRoute'
+import paymentRouter from '../route/pamentRoute'
 
 //passport
 const passport = require("passport");
@@ -61,6 +62,7 @@ export const createServer = () => {
         app.use("/api/conversation", conversationRoute);
         app.use("/api/tasks", tasksRouter);
         app.use("/api/meeting", meetingRouter)
+        app.use("/api/payment", paymentRouter)
         
         app.use(errorHandling);
 
