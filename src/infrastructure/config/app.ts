@@ -13,7 +13,7 @@ import conversationRoute from "../../infrastructure/route/conversation";
 import http from 'http'
 import tasksRouter from '../route/tasksRoutes'
 import meetingRouter from '../route/meetingRoute'
-import paymentRouter from '../route/pamentRoute'
+import paymentRouter from '../route/paymentRoute'
 
 //passport
 const passport = require("passport");
