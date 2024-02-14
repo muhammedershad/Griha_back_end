@@ -8,7 +8,7 @@ interface User {
     phone: string,
     password: string,
     image: string,
-    IsBlocked: boolean,
+    isBlocked: boolean,
     username: string,
     address: {
         streetAddress: string,
@@ -19,6 +19,7 @@ interface User {
         pincode: string,
     },
     createdAt: Date,
+    client: boolean
 }
 
 export default User

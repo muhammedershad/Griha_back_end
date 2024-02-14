@@ -113,7 +113,7 @@ class userController {
 
             if (!isValidEmail(email)) {
                 // Validate email format
-                console.log("There si something wrong with the email")
+                console.log("There is something wrong with the email")
                 return res
                     .status(200)
                     .json({ success: false, message: "Invalid email format" });

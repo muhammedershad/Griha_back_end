@@ -98,7 +98,7 @@ class Userusecase {
                 };
             } else {
                 // console.log(password);
-                if ( user.IsBlocked ) {
+                if ( user.isBlocked ) {
                     return {
                         success: false,
                         message: "User is blocked by admin",
@@ -107,10 +107,10 @@ class Userusecase {
 
                 const verifyPassword = await encryptService.verifyHashData(
                     password,
-                    user?.Password
+                    user?.password
                 );
                 
-                user.Password = ''
+                user.password = ''
 
                 if ( verifyPassword ) {
                     const token = await JWT.createToken(user._id, "user");

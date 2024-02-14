@@ -5,6 +5,7 @@ import UserModel from "../database/userModel";
 import { ParsedQs } from "qs";
 
 class UserRepository {
+    //save data to database
     async save(
         user:
             | User
@@ -12,12 +13,12 @@ class UserRepository {
             | undefined
     ) {
         const data = {
-            FirstName: user?.firstName,
-            LastName: user?.lastName,
-            Username: user?.username,
-            Password: user?.password,
-            Email: user?.email,
-            Phone: user?.phone,
+            firstName: user?.firstName,
+            lastName: user?.lastName,
+            username: user?.username,
+            password: user?.password,
+            email: user?.email,
+            phone: user?.phone,
         };
         const newUser = new UserModel(data);
         await newUser.save();
@@ -32,7 +33,7 @@ class UserRepository {
     async findByEmail(email: string) {
         try {
             // console.log('email exist check', email)
-            const existingUser = await UserModel.findOne({ Email: email });
+            const existingUser = await UserModel.findOne({ email });
             // console.log(existingUser,'existinguser')
             if (existingUser) {
                 return {
@@ -54,7 +55,7 @@ class UserRepository {
     async findByUsername(username: string) {
         try {
             // console.log(username, "checking username");
-            const user = await UserModel.findOne({ Username: username });
+            const user = await UserModel.findOne({ username: username });
             // console.log(user, "user");
             if (user) {
                 return {
@@ -89,7 +90,7 @@ class UserRepository {
 
     async login(email: string) {
         try {
-            const user = await UserModel.findOne({ Email: email });
+            const user = await UserModel.findOne({ email });
             return user;
         } catch (error) {
             console.log(error);
@@ -100,18 +101,18 @@ class UserRepository {
         try {
             const user = await UserModel.findById( userId )
             if ( user ) {
-                user.IsBlocked = !user.IsBlocked;
+                user.isBlocked = !user.isBlocked;
                 const success = await user.save()
                 if ( success ) {
                     return {
                         success: true,
-                        message: ` ${user.IsBlocked ? 'Unblocked' : 'Blocked'} user`,
+                        message: ` ${user.isBlocked ? 'Unblocked' : 'Blocked'} user`,
                         user: user
                     }
                 } else {
                     return {
                         success: false,
-                        message: `Error in ${user.IsBlocked ? 'unblocking' : 'blocking'} user`
+                        message: `Error in ${user.isBlocked ? 'unblocking' : 'blocking'} user`
                     }
                 }
             } else {
@@ -139,7 +140,7 @@ class UserRepository {
         try {
             const user = await UserModel.findById( userId )
             if ( user ) {
-                user.Client = !user.Client;
+                user.client = !user.client;
                 const success = await user.save()
                 if ( success ) {
                     return {
@@ -166,7 +167,7 @@ class UserRepository {
 
     async allClients() {
         try {
-            const response = await UserModel.find({Client: true})
+            const response = await UserModel.find({client: true})
             return response
         } catch (error) {
             console.log(error);
