@@ -25,15 +25,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const UsersSchema = new mongoose_1.Schema({
-    FirstName: { type: String, required: true },
-    LastName: { type: String, required: true },
-    Username: { type: String, required: true, unique: true },
-    Password: { type: String, required: true },
-    PhoneNumber: { type: Number, required: true },
-    Email: { type: String, required: true, unique: true },
-    Image: { type: String },
-    Client: { type: Boolean, required: true },
-    IdBlocked: { type: Boolean, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    username: { type: String, required: true },
+    password: { type: String, required: true },
+    phone: { type: Number, required: true },
+    email: { type: String, required: true, unique: true },
+    image: { type: String },
+    client: { type: Boolean, required: true, default: false },
+    isBlocked: { type: Boolean, required: true, default: false },
+    createdAt: { type: Date, default: new Date() }
 });
 const UserModel = mongoose_1.default.model('Users', UsersSchema);
 exports.default = UserModel;

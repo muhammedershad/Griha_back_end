@@ -25,29 +25,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const EmployeesSchema = new mongoose_1.Schema({
-    FirstName: { type: String, required: true },
-    LastName: { type: String, required: true },
-    Username: { type: String, required: true, unique: true },
-    Password: { type: String, required: true },
-    PhoneNumber: { type: Number, required: true },
-    JobRole: {
-        Department: { type: String, required: true },
-        Experience: { type: Number, required: true },
-        JobRole: { type: String, required: true },
-        JoinDate: { type: Date, required: true },
-    },
-    BankDetails: {
-        AccountNumber: { type: Number, required: true },
-        BankName: { type: String, required: true },
-        IFSCcode: { type: String, required: true },
-        PanNumber: { type: String, required: true },
-        UpiId: { type: String, required: true },
-    },
-    Email: { type: String, required: true, unique: true },
-    TeamLead: { type: Boolean, required: true },
-    IsBlocked: { type: Boolean, required: true },
-    IdApproved: { type: Boolean, required: true },
-    IsSenior: { type: Boolean, required: true },
+    lastName: { type: String },
+    firstName: { type: String, required: true },
+    password: { type: String, required: true },
+    phone: { type: Number },
+    department: { type: String, required: true },
+    experience: { type: Number },
+    jobRole: { type: String, required: true },
+    joinedDate: { type: Date, required: true, default: new Date() },
+    username: { type: String },
+    email: { type: String, required: true, unique: true },
+    teamLead: { type: Boolean, required: true, default: false },
+    isBlocked: { type: Boolean, required: true, default: false },
+    isSenior: { type: Boolean, required: true, default: false },
+    image: { type: String },
 });
-const EmployeeModel = mongoose_1.default.model('Employees', EmployeesSchema);
-exports.default = EmployeeModel;
+const Employees = mongoose_1.default.model("Employees", EmployeesSchema);
+exports.default = Employees;

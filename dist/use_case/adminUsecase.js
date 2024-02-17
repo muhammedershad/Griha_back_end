@@ -1,7 +1,6 @@
 "use strict";
 // import { ObjectId } from "mongoose";
 // import User from "../domain/user";
-// import adminRepository from "../infrastructure/repository/adminRepository";
 // class adminUsecase {
 //     private adminRepository: adminRepository;
 //     constructor(adminRepository: adminRepository) {

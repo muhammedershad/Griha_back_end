@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const meetingController_1 = __importDefault(require("../../adapter/meetingController"));
+const meetingRepository_1 = __importDefault(require("../repository/meetingRepository"));
+const meetingUsecase_1 = __importDefault(require("../../use_case/meetingUsecase"));
+const repository = new meetingRepository_1.default();
+const useCase = new meetingUsecase_1.default(repository);
+const controller = new meetingController_1.default(useCase);
+const router = express_1.default.Router();
+// router.get('/', ( req, res, next ) => controller.test( req, res, next ));
+router.post('/', (req, res, next) => controller.addTimeSlot(req, res, next));
+router.get('/', (req, res, next) => controller.getTimeSlotForEmployee(req, res, next));
+router.patch('/:meetingId', (req, res, next) => controller.cancelTimeSlot(req, res, next));
+router.get('/allTimeSlots', (req, res, next) => controller.allTimeSlotForUser(req, res, next));
+router.post('/book', (req, res, next) => controller.bookMeeting(req, res, next));
+router.get('/book', (req, res, next) => controller.getScheduledMeetingOfUser(req, res, next));
+router.get('/employee-meetings', (req, res, next) => controller.getScheduledMeetingOfEmployee(req, res, next));
+exports.default = router;

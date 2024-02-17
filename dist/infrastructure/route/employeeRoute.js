@@ -1,12 +1,32 @@
 "use strict";
-// import employeeController from "../../adapter/userController";
-// import employeeRepository from "../repository/userRepository";
-// import employeeUsecase from "../../use_case/userUsecase";
-// import express from "express";
-// const repository = new employeeRepository()
-// const useCase = new employeeUsecase(repository)
-// const controller = new employeeController(useCase)
-// const router = express.Router()
-// //Test Server
-// router.post('/register', (req, res) => controller.register(req, res));
-// export default router
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const employeeRepository_1 = __importDefault(require("../repository/employeeRepository"));
+const employeeUsecase_1 = __importDefault(require("../../use_case/employeeUsecase"));
+const employeeController_1 = __importDefault(require("../../adapter/employeeController"));
+const express_1 = __importDefault(require("express"));
+const adminAuthMiddelware_1 = __importDefault(require("../middleware/adminAuthMiddelware"));
+const employeeAuthMiddleware_1 = __importDefault(require("../middleware/employeeAuthMiddleware"));
+const bankRepository_1 = __importDefault(require("../repository/bankRepository"));
+const repository = new employeeRepository_1.default();
+const bankRepository = new bankRepository_1.default();
+const useCase = new employeeUsecase_1.default(repository, bankRepository);
+const controller = new employeeController_1.default(useCase);
+const router = express_1.default.Router();
+//Test Server
+router.post('/login', (req, res) => controller.login(req, res));
+router.post('/register', adminAuthMiddelware_1.default, (req, res) => controller.register(req, res));
+router.get('/allEmployees', (req, res) => controller.allEmployees(req, res));
+router.patch('/block-employee', adminAuthMiddelware_1.default, (req, res) => controller.blockEmployee(req, res));
+router.patch('/change-employee-role', adminAuthMiddelware_1.default, (req, res) => controller.changeEmployeeRole(req, res));
+router.post('/logout', (req, res) => controller.logout(req, res));
+router.patch('/profile', employeeAuthMiddleware_1.default, (req, res) => controller.profileUpdate(req, res));
+router.patch('/update-profile-photo', employeeAuthMiddleware_1.default, (req, res) => controller.profilephotoUpdate(req, res));
+router.post('/employee', employeeAuthMiddleware_1.default, (req, res) => controller.employeeDetails(req, res));
+router.patch('/change-password', employeeAuthMiddleware_1.default, (req, res) => controller.changePassword(req, res));
+router.post('/update-bank-details', employeeAuthMiddleware_1.default, (req, res) => controller.updateBankDetails(req, res));
+router.get('/bank-details/:userId', employeeAuthMiddleware_1.default, (req, res) => controller.getEmployeeBankDetails(req, res));
+router.get('/all-seniors', employeeAuthMiddleware_1.default, (req, res, next) => controller.allSeniorEmployees(req, res, next));
+exports.default = router;

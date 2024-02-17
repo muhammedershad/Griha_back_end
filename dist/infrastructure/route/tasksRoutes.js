@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const tasksController_1 = __importDefault(require("../../adapter/tasksController"));
+const tasksUsecase_1 = __importDefault(require("../../use_case/tasksUsecase"));
+const tasks_1 = __importDefault(require("../repository/tasks"));
+const repository = new tasks_1.default();
+const useCase = new tasksUsecase_1.default(repository);
+const controller = new tasksController_1.default(useCase);
+const router = express_1.default.Router();
+router.get('/test', (req, res, next) => controller.test(req, res, next));
+router.post('/', (req, res, next) => controller.createTask(req, res, next));
+router.get('/:projectId', (req, res, next) => controller.getAllTasksByProject(req, res, next));
+router.get('/employee/:employeeId', (req, res, next) => controller.employeeAllTasks(req, res, next));
+router.get('/task-details/:taskId', (req, res, next) => controller.taskDetials(req, res, next));
+router.post('/response', (req, res, next) => controller.addResponse(req, res, next));
+router.post('/comment', (req, res, next) => controller.addComment(req, res, next));
+exports.default = router;
