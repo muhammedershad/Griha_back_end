@@ -61,6 +61,10 @@ class ProjectRepository {
                 .populate("team.teamLead") // Populate team lead with specific fields
                 .populate("clients") // Populate team lead with specific fields
                 .populate("progress.postedBy") // Populate submittedBy with specific fields
+                .populate({
+                    path: 'progress.comments.user',
+                    select: 'firstName lastName image', // Specify the fields you want to select for the user
+                  })
                 .exec();
             return response;
         } catch (error) {
@@ -183,7 +187,7 @@ class ProjectRepository {
             });
 
             // Save the updated project
-            await project.save();
+            await project.save()
 
             return project
         } catch (error) {
