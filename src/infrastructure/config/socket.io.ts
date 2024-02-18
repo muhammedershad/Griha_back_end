@@ -11,7 +11,6 @@ const configureSocket = (server: http.Server) => {
         transports: ["websocket", "polling"],
         maxHttpBufferSize: 5 * 1024 * 1024,
     });
-
     videoCall(io)
     chat(io)
 

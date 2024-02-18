@@ -55,7 +55,7 @@ class UserRepository {
     async findByUsername(username: string) {
         try {
             // console.log(username, "checking username");
-            const user = await UserModel.findOne({ username: username });
+            const user = await UserModel.findOne({ username });
             // console.log(user, "user");
             if (user) {
                 return {

@@ -106,7 +106,7 @@ class userController {
 
     async register(req: Request, res: Response) {
         try {
-            console.log('userController',req.body)   //test
+            // console.log('userController',req.body)   //test
             let { otp, email } = req.body;
             email = email.trim();
             otp = otp.trim();

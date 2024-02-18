@@ -13,7 +13,7 @@ export const getCheckoutSession = async (
         const paymentDetails: IPayment | null = await Payment.findById(
             req.params.paymentId
         );
-        console.log(paymentDetails);
+
         const stripe = new Stripe(stripeApiKey);
 
         const customer = await stripe.customers.create({
@@ -27,13 +27,18 @@ export const getCheckoutSession = async (
             },
         });
 
-        //create checkout session
+        // Assuming you have a payment model with customerId field, update it here
+        await Payment.findByIdAndUpdate(req.params.paymentId, {
+            status: "success",
+        });
+
+        // Create a checkout session with billing details
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
             success_url: `${process.env.CLIENT_SITE_URL}/checkout-success`,
             cancel_url: `${req.protocol}://${req.get("host")}/payment`,
-            customer_email: "muhammedershadp@gmail.com",
+            customer: customer.id, // Use the existing or newly created customer
             client_reference_id: req.params.adminId,
             line_items: [
                 {
@@ -41,7 +46,7 @@ export const getCheckoutSession = async (
                         currency: "inr",
                         unit_amount: (paymentDetails?.amount as number) * 100,
                         product_data: {
-                            name: 'Project',
+                            name: "Project",
                             description: "Payment",
                             images: [
                                 "https://www.thehousedesigners.com/images/uploads/SiteImage-Landing-contemporary-house-plans-1.webp",
@@ -52,6 +57,7 @@ export const getCheckoutSession = async (
                     quantity: 1,
                 },
             ],
+            billing_address_collection: "required", // Ensure billing details are collected
         });
 
         res.status(200).json({
@@ -84,13 +90,11 @@ export const createPayment = async (
         const payment = new Payment(req.body);
         const response = await payment.save();
         if (response)
-            return res
-                .status(200)
-                .json({
-                    success: true,
-                    message: "Payment created",
-                    payment: response,
-                });
+            return res.status(200).json({
+                success: true,
+                message: "Payment created",
+                payment: response,
+            });
     } catch (error) {
         next(error);
     }
@@ -105,13 +109,11 @@ export const allpayments = async (
         const response = await Payment.find()
             .populate("paidBy")
             .populate("project");
-        return res
-            .status(200)
-            .json({
-                success: true,
-                message: "payment data fetched",
-                payments: response,
-            });
+        return res.status(200).json({
+            success: true,
+            message: "payment data fetched",
+            payments: response,
+        });
     } catch (error) {
         next(error);
     }
@@ -127,14 +129,26 @@ export const userPayments = async (
         const response = await Payment.find({ paidBy: userId })
             .populate("project")
             .populate("paidBy");
-        return res
-            .status(200)
-            .json({
-                success: true,
-                message: "data fetched successfully",
-                payments: response,
-            });
+        return res.status(200).json({
+            success: true,
+            message: "data fetched successfully",
+            payments: response,
+        });
     } catch (error) {
         next(error);
+    }
+};
+
+export const userPendingPayments = async (req: Request,res: Response,next: NextFunction) => {
+    try {
+        const response = await Payment.find({paidBy: req.params.userId, status:'pending'}).populate("project")
+        .populate("paidBy");
+        return res.status(200).json({
+            success: true,
+            message: "data fetched successfully",
+            payments: response,
+        });
+    } catch (error) {
+        next(error)
     }
 };

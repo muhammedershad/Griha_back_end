@@ -6,7 +6,7 @@ import mongoose, { Types, Schema } from "mongoose";
 class ProjectRepository {
     async createProject(data: IProjects) {
         try {
-            const project = new ProjectModel(data);
+            const project = new ProjectModel({data, status: 'ongoing'});
             const response = project.save();
             // console.log(response, "repository");
             return response;

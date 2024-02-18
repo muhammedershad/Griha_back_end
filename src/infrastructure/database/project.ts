@@ -8,6 +8,7 @@ export interface IProjects extends Document {
     details: string;
     time: Date;
     location: string;
+    status: string
     team: {
         members: ObjectId[] | null;
         teamLead: ObjectId;
@@ -40,6 +41,7 @@ export interface IProjects extends Document {
 const ProjectsSchema: Schema = new Schema({
     projectName: { type: String, required: true },
     location: { type: String },
+    status: { type: String},
     details: { type: String, required: true },
     clients: [{ type: Schema.Types.ObjectId, ref: "Users" }],
     postedBy: { type: Schema.Types.ObjectId, required: true, ref: "Employees" },
