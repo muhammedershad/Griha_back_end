@@ -16,25 +16,25 @@ import meetingRouter from '../route/meetingRoute'
 import paymentRouter from '../route/paymentRoute'
 
 //passport
-const passport = require("passport");
-import cookieSession from "cookie-session";
+// const passport = require("passport");
+// import cookieSession from "cookie-session";
 import errorHandling from "../middleware/errorHandling";
 import configureSocket from "./socket.io";
-require("../config/passport-config");
+// require("../config/passport-config");
 
 const app = express();
 export const server = http.createServer(app);
 const io = configureSocket(server) 
 
 //passport configuration
-app.use(
-    cookieSession({
-        name: "google-auth-session",
-        keys: ["key1", "key2"],
-    })
-);
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(
+//     cookieSession({
+//         name: "google-auth-session",
+//         keys: ["key1", "key2"],
+//     })
+// );
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 export const createServer = () => {
     try {
