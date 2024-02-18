@@ -46,7 +46,7 @@ export const createServer = () => {
         app.use(express.static(path.join(__dirname, "public")));
 
         const corsOptions = {
-            origin: [links.BASE_URL_LOCAL,links.BASE_URL,],
+            origin: links.BASE_URL,
             methods: "GET, POST, OPTIONS, PATCH, PUT",
             credentials: true,
             optionsSuccessStatus: 204,
