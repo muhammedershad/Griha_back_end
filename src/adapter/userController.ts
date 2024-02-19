@@ -13,6 +13,7 @@ import user from "../domain/user";
 import { ParsedQs } from "qs";
 import { ObjectId } from "mongoose";
 import { NextFunction } from "express-serve-static-core";
+import { links } from "../infrastructure/config/links";
 
 class userController {
     private userUsecase: Userusecase;
@@ -178,6 +179,7 @@ class userController {
                     secure: true,
                     sameSite: "none",
                     expires: expirationDate,
+                    domain: links.BASE_URL
                 });
                 return res.status(200).json({
                     success: true,
