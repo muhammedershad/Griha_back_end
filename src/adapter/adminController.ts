@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import AdminAuthUsecase from "../use_case/adminAuthUsecase";
+import { links } from "../infrastructure/config/links";
 
 class AdminController {
     private adminAuthUsecase: AdminAuthUsecase;
@@ -42,6 +43,7 @@ class AdminController {
                     httpOnly: true,
                     secure: true,
                     sameSite: "strict",
+                    domain: links.BASE_URL
                 });
                 return res.status(200).json({
                     success: true,
