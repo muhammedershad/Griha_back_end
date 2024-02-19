@@ -169,12 +169,15 @@ class userController {
                 req.body.password
             );
             // console.log(login, "login status");
+            const expirationDate = new Date(); // Create a new Date object
+            expirationDate.setHours(expirationDate.getHours() + 1);
+
             if (login?.success) {
                 res.cookie("user_token", login?.token || "", {
                     httpOnly: true,
                     secure: true,
-                    sameSite: "strict",
-                    // credentials: "include",
+                    sameSite: "none",
+                    expires: expirationDate,
                 });
                 return res.status(200).json({
                     success: true,
