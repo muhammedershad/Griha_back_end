@@ -4,6 +4,7 @@ import { isValidEmail, validations } from "../use_case/interface/validations";
 import { ObjectId, Schema } from "mongoose";
 import { Employee } from "../domain/employee";
 import { NextFunction } from "express";
+import { links } from "../infrastructure/config/links";
 
 class EmployeeController {
     private employeeUsecase: EmployeeUsecase
@@ -68,12 +69,15 @@ class EmployeeController {
                 req.body.password
             );
             // console.log(login, "login status");
+            const expirationDate = new Date(); // Create a new Date object
+            expirationDate.setHours(expirationDate.getHours() + 1);
             if (login?.success) {
                 res.cookie("employee_token", login?.token || "", {
                     httpOnly: true,
                     secure: true,
-                    sameSite: "strict",
-                    // credentials: "include",
+                    sameSite: "none",
+                    expires: expirationDate,
+                    domain: links.BASE_URL
                 });
                 return res.status(200).json({
                     success: true,

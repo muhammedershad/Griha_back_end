@@ -55,10 +55,10 @@ const ProjectsSchema: Schema = new Schema({
         },
     },
     address: {
-        address: { type: String, required: true },
-        district: { type: String, required: true },
-        state: { type: String, required: true },
-        pincode: { type: String, required: true },
+        address: { type: String,},
+        district: { type: String, },
+        state: { type: String,},
+        pincode: { type: String,},
     },
     progress: [
         {

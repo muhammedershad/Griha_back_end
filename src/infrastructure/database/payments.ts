@@ -6,6 +6,8 @@ export interface IPayment extends Document {
   paidTo: ObjectId;
   purpose: String;
   paymentType: String;
+  initiatedDate: Date,
+  paidDate: Date,
   status: String;
   amount: Number;
   bonus: Number;
@@ -20,6 +22,8 @@ const PaymentSchema: Schema = new Schema({
   paymentType: { type: String, required: true },
   status: { type: String, required: true },
   amount: { type: Number, required: true },
+  initiatedDate: { type: Date, default: new Date()},
+  paidDate: { type: Date },
   bonus: { type: Number,},
   project: { type: Schema.Types.ObjectId, ref: 'Projects'},
   progress: { type: Schema.Types.ObjectId, res: 'Projects.progress'}

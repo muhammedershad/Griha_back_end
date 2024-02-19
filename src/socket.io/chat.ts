@@ -35,7 +35,10 @@ const chat = (io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, a
         })
 
         socket.on('sendMessage', ({senderId, receiverId, text}) => {
+            console.log(senderId, receiverId, text)
             const user = getUsers(receiverId)
+            console.log(text,user );
+            
             io.to(user?.socketId).emit('getMessage', {
                 senderId,
                 text

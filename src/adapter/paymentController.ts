@@ -29,7 +29,7 @@ export const getCheckoutSession = async (
 
         // Assuming you have a payment model with customerId field, update it here
         await Payment.findByIdAndUpdate(req.params.paymentId, {
-            status: "success",
+            status: "success", paidDate: Date.now()
         });
 
         // Create a checkout session with billing details
